@@ -1,9 +1,4 @@
 <template>
-  <NewUserModal :new-user-modal-is-open="newUserModalIsOpen"
-                @event-close-modal="closeNewUserModal"
-                @event-log-in-executed="executeLogIn"
-  />
-
   <Modal :modal-is-open="loginModalIsOpen">
     <template #title>
       Sisselogimine

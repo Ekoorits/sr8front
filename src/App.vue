@@ -1,10 +1,12 @@
 <template>
   <LoginModal :login-modal-is-open="loginModalIsOpen"
-              :new-user-modal-is-open="newUserModalIsOpen"
               @event-open-new-user-modal="openNewUserModal"
-              @event-close-modal="closeNewUserModal"
               @event-close-login-modal="closeLogInModal"
               @event-log-in-executed="executeLogIn"
+  />
+  <NewUserModal :new-user-modal-is-open="newUserModalIsOpen"
+                @event-close-new-user-modal="closeNewUserModal"
+                @event-log-in-executed="executeLogIn"
   />
               <!--- TODO: implement close and execute LogIn -->
 
@@ -38,6 +40,10 @@ export default {
 
     openNewUserModal() {
       this.newUserModalIsOpen = true
+    },
+
+    closeNewUserModal() {
+      this.newUserModalIsOpen = false
     },
 
     closeLogInModal() {

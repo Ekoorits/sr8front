@@ -1,10 +1,11 @@
 <template>
   <LoginModal :login-modal-is-open="loginModalIsOpen"
+              :new-user-modal-is-open="newUserModalIsOpen"
+              @open-new-user-modal="openNewUserModal"
               @event-close-modal="closeLogInModal"
               @event-log-in-executed="executeLogIn"
   />
               <!--- TODO: implement close and execute LogIn -->
-
   <nav>
     <router-link to="/">Kodu</router-link> |
   </nav>
@@ -16,20 +17,25 @@
 
 import Modal from "@/components/modal/Modal.vue";
 import LoginModal from "@/components/modal/custom/LoginModal.vue";
+import NewUserModal from "@/components/modal/custom/NewUserModal.vue";
 
 export default {
   name: 'App',
-  components: {LoginModal, Modal},
+  components: {NewUserModal, LoginModal, Modal},
 
   data(){
     return {
       isLoggedIn: false,
       isAdmin: false,
       isModerator: false,
-      loginModalIsOpen: false
+      loginModalIsOpen: false,
+      newUserModalIsOpen: false
     }
   },
   methods: {
+    openNewUserModal() {
+      this.openNewUserModal=true
+    },
 
     closeLogInModal() {
       this.loginModalIsOpen = false

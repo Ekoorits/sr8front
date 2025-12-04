@@ -107,7 +107,7 @@ export default {
       if (this.incorrectCredentialsInput(error)) {
         this.displayIncorrectCredentialsAlert();
       } else {
-        NavigationService.navigateToErrorView()
+        NavigationService.navigateToErrorView();
       }
     },
 

@@ -48,6 +48,10 @@ export default {
   components: {Modal},
   props: {
     newUserModalIsOpen: Boolean
-  }
+  },
+  emits:[
+      'event-close-new-user-modal',
+      'event-create-new-user-executed'
+  ]
 }
 </script>

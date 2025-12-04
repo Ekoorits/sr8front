@@ -1,7 +1,8 @@
 <template>
   <LoginModal :login-modal-is-open="loginModalIsOpen"
               :new-user-modal-is-open="newUserModalIsOpen"
-              @open-new-user-modal="openNewUserModal"
+              @event-open-new-user-modal="openNewUserModal"
+              @event-close-modal="closeNewUserModal"
               @event-close-login-modal="closeLogInModal"
               @event-log-in-executed="executeLogIn"
   />
@@ -41,8 +42,7 @@ export default {
 
     closeLogInModal() {
       this.loginModalIsOpen = false
-    }
-
+    },
   }
 }
 </script>

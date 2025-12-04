@@ -20,15 +20,15 @@
       </div>
       <div class="form-floating mb-3">
         <p style="text-align: left">Kui sul pole veel kasutajat
-          <button @click="$emit('open-new-user-modal'); $emit('event-close-login-modal')" type="submit" class="btn btn-outline-success ms-2">Loo uus konto</button>
+          <button @click="$emit('event-open-new-user-modal'); $emit('event-close-login-modal')" type="submit" class="btn btn-outline-success ms-2">Loo uus konto</button>
         </p>
 
       </div>
     </template>
 
     <template #buttons>
-      <button @click="$emit('event-close-modal')" type="submit" class="btn btn-outline-secondary me-3">Sulge</button>
-      <button @click="$emit('event-log-out-executed')" type="submit" class="btn btn-outline-success">Logi sisse</button>
+      <button @click="$emit('event-close-login-modal')" type="submit" class="btn btn-outline-secondary me-3">Sulge</button>
+      <button @click="$emit('event-log-in-executed')" type="submit" class="btn btn-outline-success">Logi sisse</button>
     </template>
   </Modal>
 </template>
@@ -44,9 +44,16 @@ export default {
     loginModalIsOpen: Boolean,
     newUserModalIsOpen: Boolean
   },
+
+  methods:{
+    closeNewUserModal(){
+      this.newUserModalIsOpen=false
+    },
+  },
+
   emits: [
       'event-close-login-modal',
-      'open-new-user-modal'
+      'event-open-new-user-modal'
   ]
 }
 </script>

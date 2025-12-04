@@ -33,7 +33,7 @@
     </template>
 
     <template #buttons>
-      <button @click="$emit('event-close-modal')" type="submit" class="btn btn-outline-secondary me-3">Sulge</button>
+      <button @click="$emit('event-close-new-user-modal')" type="submit" class="btn btn-outline-secondary me-3">Sulge</button>
       <button @click="$emit('event-create-new-user-executed')" type="submit" class="btn btn-outline-success">Loo konto</button>
     </template>
 
@@ -48,6 +48,10 @@ export default {
   components: {Modal},
   props: {
     newUserModalIsOpen: Boolean
-  }
+  },
+  emits: [
+      'event-close-new-user-modal',
+      'event-create-new-user-executed'
+  ]
 }
 </script>

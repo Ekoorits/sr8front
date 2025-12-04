@@ -1,5 +1,6 @@
 <template>
-  <Modal :modal-is-open="newUserModalIsOpen">
+  <Modal :modal-is-open="newUserModalIsOpen"
+          @event-close-modal="$emit('event-close-modal')">
 
     <template #title>
       Loo uus kasutaja
@@ -33,7 +34,7 @@
     </template>
 
     <template #buttons>
-      <button @click="$emit('event-close-new-user-modal')" type="submit" class="btn btn-outline-secondary me-3">Sulge</button>
+      <button @click="$emit('event-close-modal')" type="submit" class="btn btn-outline-secondary me-3">Sulge</button>
       <button @click="$emit('event-create-new-user-executed')" type="submit" class="btn btn-outline-success">Loo konto</button>
     </template>
 
@@ -50,7 +51,7 @@ export default {
     newUserModalIsOpen: Boolean
   },
   emits: [
-      'event-close-new-user-modal',
+      'event-close-modal',
       'event-create-new-user-executed'
   ]
 }

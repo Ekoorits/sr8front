@@ -2,10 +2,11 @@
   <LoginModal :login-modal-is-open="loginModalIsOpen"
               :new-user-modal-is-open="newUserModalIsOpen"
               @open-new-user-modal="openNewUserModal"
-              @event-close-modal="closeLogInModal"
+              @event-close-login-modal="closeLogInModal"
               @event-log-in-executed="executeLogIn"
   />
               <!--- TODO: implement close and execute LogIn -->
+
   <nav>
     <router-link to="/">Kodu</router-link> |
   </nav>
@@ -33,8 +34,9 @@ export default {
     }
   },
   methods: {
+
     openNewUserModal() {
-      this.openNewUserModal=true
+      this.newUserModalIsOpen = true
     },
 
     closeLogInModal() {

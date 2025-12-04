@@ -1,7 +1,6 @@
 <template>
   <Modal :modal-is-open="newUserModalIsOpen"
-         @event-close-modal="$emit('event-close-modal')"
-  >
+          @event-close-modal="$emit('event-close-modal')">
 
     <template #title>
       Loo uus kasutaja

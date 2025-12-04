@@ -1,5 +1,7 @@
 <template>
-  <Modal :modal-is-open="loginModalIsOpen">
+  <Modal :modal-is-open="loginModalIsOpen"
+         @event-close-modal="$emit('event-close-modal')"
+  >
     <template #title>
       Sisselogimine
     </template>

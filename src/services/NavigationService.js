@@ -6,6 +6,10 @@ export default {
         router.push({name: 'homeRoute'})
     },
 
+    navigateToSearchView() {
+        router.push({name: 'searchRoute'})
+    },
+
     navigateToErrorView() {
         router.push({name: 'errorRoute'})
     },

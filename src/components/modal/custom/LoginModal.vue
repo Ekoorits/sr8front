@@ -20,7 +20,10 @@
       </div>
       <div class="form-floating mb-3">
         <p style="text-align: left">Kui sul pole veel kasutajat
-          <button @click="$emit('event-open-new-user-modal'); $emit('event-close-modal')" type="submit" class="btn btn-outline-success ms-2">Loo uus konto</button>
+          <button @click="$emit('event-open-new-user-modal');
+                          $emit('event-close-modal')"
+                          type="submit" class="btn btn-outline-success ms-2">Loo uus konto
+          </button>
         </p>
 
       </div>
@@ -130,7 +133,7 @@ export default {
     },
 
     resetAlertMessage() {
-      this.alertMessage = '';
+      this.alertMessage = ''
     },
 
   }

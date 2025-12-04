@@ -4,11 +4,9 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #be4e29;
-}
-
-body {
     background-color: #f5efe3;
 }
+
 
 nav {
     padding: 30px;
@@ -57,4 +55,10 @@ nav a.router-link-exact-active {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.btn-custom-large {
+    width: 300px;
+    height: 200px;
+    font-size: xxx-large;
 }

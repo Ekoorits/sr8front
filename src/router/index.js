@@ -1,23 +1,30 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import SearchView from "@/views/SearchView.vue";
+import ErrorView from "@/views/ErrorView.vue";
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/search',
-    name: 'search',
-    component: SearchView
-  }
+    {
+        path: '/',
+        name: 'homeRoute',
+        component: HomeView
+    },
+    {
+        path: '/search',
+        name: 'searchRoute',
+        component: SearchView
+    },
+    {
+        path:'/error',
+        name: 'errorRoute',
+        component: ErrorView
+    }
+
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
+    history: createWebHistory(process.env.BASE_URL),
+    routes
 })
 
 export default router

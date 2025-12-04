@@ -8,6 +8,9 @@
 
     <template #body>
       <div class="form-floating mb-3">
+        <AlertDanger :alert-message="alertMessage" @event-alert-box-closed="resetAlertMessage"/>
+      </div>
+      <div class="form-floating mb-3">
         <input v-model="username" type="text" class="form-control" placeholder="Kasutajanimi">
         <label>Kasutajanimi</label>
       </div>
@@ -34,10 +37,12 @@
 import Modal from "@/components/modal/Modal.vue";
 import NewUserModal from "@/components/modal/custom/NewUserModal.vue";
 import LoginService from "@/services/LoginService";
+import NavigationService from "@/services/NavigationService";
+import AlertDanger from "@/components/modal/alerts/AlertDanger.vue";
 
 export default {
   name: 'LoginModal',
-  components: {NewUserModal, Modal},
+  components: {AlertDanger, NewUserModal, Modal},
   props: {
     loginModalIsOpen: Boolean,
     newUserModalIsOpen: Boolean
@@ -62,7 +67,6 @@ export default {
         message: '',
         errorCode: 0
       },
-
     }
   },
 
@@ -89,7 +93,7 @@ export default {
     handleLoginResponse(response) {
       this.loginResponse = response.data
       this.setSessionStorageItems();
-
+      this.$emit('event-close-modal')
     },
 
     setSessionStorageItems() {

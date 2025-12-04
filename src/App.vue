@@ -33,7 +33,8 @@ export default {
       isAdmin: false,
       isModerator: false,
       loginModalIsOpen: false,
-      newUserModalIsOpen: false
+      newUserModalIsOpen: false,
+      modalIsOpen:false
     }
   },
   methods: {

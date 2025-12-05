@@ -5,11 +5,12 @@ export default {
     sendGetLoginRequest(username, password) {
 
         return axios.get('/login', {
-            headers: {Accept: 'application/json'},
+            headers: {Prefer: preferValue, Accept: 'application/json'},
             params: {
                 username: username,
                 password: password
             }
         });
     },
+
 }

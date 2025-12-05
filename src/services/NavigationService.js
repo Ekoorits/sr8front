@@ -6,16 +6,27 @@ export default {
         router.push({name: 'homeRoute'})
     },
 
-    navigateToSearchView() {
-        router.push({name: 'searchRoute'})
+    navigateToAtmsView() {
+        router.push({name: 'atmsRoute'})
     },
 
     navigateToErrorView() {
-        router.push({name: 'errorRoute'})
+        // todo: productionis sisse kommenteerida
+        // router.push({name: 'errorRoute'})
     },
+
 
     navigateToNotAuthorizedView() {
         router.push({name: 'notAuthorizedRoute'})
+    },
+
+    navigateToEditAtmLocation(locationId) {
+        router.push({
+            name: 'locationRoute',
+            query: {
+                locationId: locationId
+            }
+        })
     },
 
 }

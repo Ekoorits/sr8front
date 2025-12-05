@@ -2,11 +2,9 @@
   <LoginModal :login-modal-is-open="loginModalIsOpen"
               @event-open-new-user-modal="openNewUserModal"
               @event-close-modal="closeLogInModal"
-              @event-log-in-executed="executeLogIn"
   />
   <NewUserModal :new-user-modal-is-open="newUserModalIsOpen"
                 @event-close-modal="closeNewUserModal"
-                @event-log-in-executed="executeLogIn"
   />
               <!--- TODO: implement close and execute LogIn -->
 

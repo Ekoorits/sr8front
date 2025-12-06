@@ -6,7 +6,6 @@
   <NewUserModal :new-user-modal-is-open="newUserModalIsOpen"
                 @event-close-modal="closeNewUserModal"
   />
-              <!--- TODO: implement close and execute LogIn -->
 
   <nav>
     <router-link to="/">Kodu</router-link> |

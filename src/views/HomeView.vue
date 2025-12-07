@@ -20,6 +20,7 @@
           <img src="../assets/images/Logo.png" style="width: 80%; height: auto"
                @click="NavigationService.navigateToSearchView()" class="btn">
         </div>
+
         <div class="col-6">
           <button @click="NavigationService.navigateToSearchView()" type="button" class="btn btn-primary btn-custom-large">Otsi retsepte</button>
         </div>

@@ -18,4 +18,8 @@ export default {
         router.push({name: 'notAuthorizedRoute'})
     },
 
+    navigateToAddIngredientView() {
+        router.push({name: 'recipeIngredientRoute'})
+    },
+
 }

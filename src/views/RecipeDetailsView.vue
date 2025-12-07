@@ -10,7 +10,7 @@
 
     <div class="row mb-5">
       <div class="col">
-        <h1>Retsepti Nimi läheb Siia.</h1>
+        <h1>{{ this.newRecipe.recipeName }}</h1>
       </div>
     </div>
 
@@ -26,8 +26,9 @@
           <label>Retsepti looja nimi</label>
         </div>
         <div class="form-floating mb-3">
-          <input v-model="newRecipe.imageData" type="text" class="form-control" placeholder="Kasutajanimi">
-          <label>Lisa toidu pilt</label>
+          <ImageInput @event-new-image-selected="handleNewImageSelected"
+                      @event-chosen-image-cleared="handleImageCleared"
+          />
         </div>
         <div class="form-group mb-3">
           <label for="exampleFormControlTextarea1">Valmistamisjuhend</label>
@@ -83,10 +84,11 @@ import NavigationService from "@/services/NavigationService";
 import CookingTimeService from "@/services/CookingTimeService";
 import LargeButton from "@/components/LargeButton.vue";
 import NewRecipeService from "@/services/NewRecipeService";
+import ImageInput from "@/components/image/ImageInput.vue";
 
 export default {
   name: 'RecipeDetails',
-  components: {LargeButton, CookingTimeDropdown, MealTypeDropdown, DifficultiesDropdown},
+  components: {ImageInput, LargeButton, CookingTimeDropdown, MealTypeDropdown, DifficultiesDropdown},
   data() {
     return {
 
@@ -150,6 +152,14 @@ export default {
 
     handleNewCookingTimeSelected(selectedCookingTimeMinutesMax) {
       this.newRecipe.cookingTimeMinutesMax = selectedCookingTimeMinutesMax
+    },
+
+    handleNewImageSelected(imageData) {
+      this.newRecipe.imageData = imageData
+    },
+
+    handleImageCleared() {
+      this.newRecipe.imageData = ''
     },
 
     getMealTypes() {

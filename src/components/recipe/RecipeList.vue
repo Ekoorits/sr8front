@@ -7,57 +7,65 @@
 
       <input
           v-model="searchText"
-          @keyup.enter="searchRecipes" type="text" class="form-control ps-5 rounded-pill" placeholder="Otsi retsepti..." >
+          type="text"
+          class="form-control ps-5 rounded-pill"
+          placeholder="Otsi retsepti..."
+      >
     </div>
 
     <!-- список найденных рецептов -->
     <ul class="list-group">
-      <li v-for="recipe in recipes"
-          :key="recipe.id"
+      <li
+          v-for="recipe in filteredRecipes"
+          :key="recipe.recipeId"
           class="list-group-item list-group-item-action"
-          @click="selectRecipe(recipe.id)">
-        {{ recipe.name }}
+          @click="selectRecipe(recipe.recipeId)"
+      >
+        {{ recipe.recipeName }}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'RecipeList',
 
+  props: {
+    // массив рецептов из родителя
+    recipes: {
+      type: Array,
+      default: () => []
+    },
+    // id выбранного рецепта (если нужно подсвечивать)
+    selectedRecipeId: {
+      type: Number,
+      default: 0
+    }
+  },
+
   data () {
     return {
-      searchText: '',
-      recipes: []
+      searchText: ''
+    }
+  },
+
+  computed: {
+    filteredRecipes () {
+      const text = this.searchText.toLowerCase().trim()
+      if (!text) {
+        return this.recipes
+      }
+      return this.recipes.filter(r =>
+          String(r.recipeName).toLowerCase().includes(text)
+      )
     }
   },
 
   methods: {
-    searchRecipes () {
-      axios.get('http://localhost:8080/recipes/search', {
-        params: {
-          name: this.searchText   // <-- то, что вводит пользователь
-        }
-      })
-          .then(response => {
-            this.recipes = response.data
-          })
-          .catch(error => {
-            console.error('Viga retseptide otsimisel', error)
-          })
-    },
-
     selectRecipe (selectedRecipeId) {
       this.$emit('event-recipe-selected', Number(selectedRecipeId))
     }
-  },
-
-  mounted () {
-    // при первом открытии можно загрузить все рецепты
-    this.searchRecipes()
   }
 }
 </script>

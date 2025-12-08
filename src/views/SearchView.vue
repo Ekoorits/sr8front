@@ -6,13 +6,20 @@
         <h1>Tee süüa targalt ja keskkonda säästvalt</h1>
       </div>
     </div>
+
     <div class="row">
       <div class="position-relative">
-        <RecipeList :recipes="recipes" :selected-recipe-name="recipes.recipeName"
-
+        <!-- ВАЖНО: тут передаём МАССИВ recipes и selectedRecipeId -->
+        <RecipeList
+            :recipes="recipes"
+            :selected-recipe-id="selectedRecipeId"
+            @event-recipe-selected="onRecipeSelected"
         />
       </div>
     </div>
+
+    <!-- всё, что ниже — твой дизайн фильтров и карточки, я не трогала -->
+
     <div class="row" style="padding:20px">
       <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
 
@@ -51,6 +58,7 @@
             <li><a class="dropdown-item" href="#">30+ min</a></li>
           </ul>
         </div>
+
         <!-- All Filters -->
         <div class="dropdown">
           <a class="dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
@@ -61,7 +69,6 @@
           </div>
         </div>
 
-        <!-- Divider -->
         <span class="mx-2">|</span>
 
         <!-- Sort -->
@@ -85,38 +92,34 @@
       </div>
 
     </div>
+
     <div class="row">
       <div class="recipe-card shadow-sm rounded-4 overflow-hidden bg-white" style="width: 260px;">
-
-        <!-- IMAGE -->
         <div class="position-relative">
           <img src="IMAGE_URL"
                alt="Retsepti pilt"
                style="width: 100%; height: 160px; object-fit: cover;">
-
-          <!-- CART BUTTON -->
           <div class="position-absolute top-0 end-0 m-2 bg-primary text-white rounded-circle p-2"
                style="cursor:pointer;">
             🛒
           </div>
-
-          <!-- FAVORITE BUTTON -->
           <div class="position-absolute bottom-0 end-0 m-2 bg-white rounded-circle p-2 shadow"
                style="cursor:pointer;">
             ⭐
           </div>
         </div>
-
-        <!-- TEXT BLOCK -->
         <div class="p-3">
-          <h5 class="fw-semibold mb-2" style="font-size: 16px;">Retsepti nimi</h5>
+          <h5 class="fw-semibold mb-2" style="font-size: 16px;">
+            {{ recipe.recipeName || 'Retsepti nimi' }}
+          </h5>
           <div class="text-muted" style="font-size: 14px;">
-            25min • Lihtne
+            {{ recipe.cookingTimeMinutesMax || '25' }}min •
+            {{ recipe.difficultyLevelNumber || 'Lihtne' }}
           </div>
         </div>
-
       </div>
     </div>
+
   </div>
 </template>
 
@@ -125,19 +128,19 @@ import RecipeList from "@/components/recipe/RecipeList.vue";
 
 export default {
   name: 'SearchView',
-  components: {RecipeList},
+  components: { RecipeList },
+
   data() {
     return {
-      search: '',
+      // массив из БД
       recipes: [],
 
-      category:{
-        name:'',
-        description:''
-      },
+      // id выбранного рецепта (для ребёнка)
+      selectedRecipeId: 0,
 
-      recipe:{
-        recipeId:0,
+      // объект выбранного рецепта (для карточки справа/снизу)
+      recipe: {
+        recipeId: 0,
         recipeName: '',
         authorName: '',
         mealType: '',
@@ -145,11 +148,13 @@ export default {
         cookingTimeMinutesMax: 0,
         pax: 0,
         instructions: '',
-        imageData: '',
+        imageData: ''
       },
 
-      //Do we need separate column in database for recipe date or database can give us that data?
-
+      category: {
+        name: '',
+        description: ''
+      },
 
       errorMessage: '',
       successMessage: '',
@@ -160,15 +165,30 @@ export default {
     }
   },
 
+  methods: {
+    // ловим событие от RecipeList
+    onRecipeSelected(recipeId) {
+      this.selectedRecipeId = recipeId
 
-  //Change to if message
+      // находим рецепт в массиве и кладём в this.recipe
+      const found = this.recipes.find(r => r.recipeId === recipeId)
+      if (found) {
+        this.recipe = found
+      }
+    }
+  },
+
   mounted() {
+    // грузим данные из БД при заходе на страницу
     fetch('/recipes')
         .then(res => res.json())
         .then(data => {
-          this.recipes = data; // сюда прилетает массив из базы
+          this.recipes = data
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+          console.error(err)
+          this.errorMessage = 'Viga retseptide laadimisel'
+        })
   }
 }
 </script>

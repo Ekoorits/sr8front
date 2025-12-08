@@ -31,7 +31,7 @@
 
 <script>
 import NavigationService from "@/services/NavigationService";
-import LargeButton from "@/components/LargeButton.vue";
+import LargeButton from "@/components/buttons/LargeButton.vue";
 
 export default {
   name: 'HomeView',

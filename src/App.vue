@@ -8,7 +8,6 @@
                 @event-close-modal="closeNewUserModal"
                 @event-log-in-executed="executeLogIn"
   />
-              <!--- TODO: implement close and execute LogIn -->
 
   <nav>
     <router-link to="/">Kodu</router-link> |

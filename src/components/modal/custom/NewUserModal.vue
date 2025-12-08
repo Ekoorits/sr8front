@@ -1,6 +1,7 @@
 <template>
   <Modal :modal-is-open="newUserModalIsOpen"
-          @event-close-modal="$emit('event-close-modal')">
+          @event-close-modal="$emit('event-close-modal')"
+  >
 
     <template #title>
       Loo uus kasutaja
@@ -8,8 +9,8 @@
 
     <template #body>
       <div>
-        <AlertDanger :alert-message="errorMessage" @event-alert-box-closed="resetMessages"></AlertDanger>
-        <AlertSuccess :alert-message="successMessage" @event-alert-box-closed="resetMessages"></AlertSuccess>
+        <AlertDanger :alert-message="errorMessage" @event-alert-box-closed="resetMessages"/>
+        <AlertSuccess :alert-message="successMessage" @event-alert-box-closed="resetMessages"/>
       </div>
       <div class="form-floating mb-3">
         <input v-model="newUser.username" type="text" class="form-control" placeholder="Kasutajanimi">
@@ -48,8 +49,8 @@
 <script>
 import Modal from "@/components/modal/Modal.vue";
 import UserService from "@/services/UserService";
-import NavigationService from "@/services/NavigationService";
 import AlertDanger from "@/components/modal/alerts/AlertDanger.vue";
+import NavigationService from "@/services/NavigationService";
 import AlertSuccess from "@/components/modal/alerts/AlertSuccess.vue";
 
 export default {
@@ -59,73 +60,83 @@ export default {
     newUserModalIsOpen: Boolean
   },
   emits: [
-      'event-close-modal',
-      'event-create-new-user-executed'
+    'event-close-modal'
   ],
-  data() {
-    return{
-      errorMessage:'',
-      successMessage:'',
-      passwordRepeat:'',
-        newUser:{
-          username: '',
-          password: '',
-          firstName:'',
-          lastName:'',
-          email:''
-        },
-      errorResponse:{
-        message:'',
-        errorCode: 0
 
-    }
+  data() {
+    return {
+      errorMessage: '',
+      successMessage: '',
+      passwordRepeat: '',
+
+      newUser: {
+        username: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        email: ''
+      },
+
+      errorResponse: {
+        message: '',
+        errorCode: 0
       }
-    },
-  methods:{
+    }
+  },
+
+  methods: {
+
     executeAddNewUser() {
       UserService.sendPostNewUserRequest(this.newUser)
           .then(() => this.handleAddNewUserResponse())
           .catch(error => this.handleAddNewUserError(error))
     },
+
     handleAddNewUserResponse() {
-      this.successMessage='Kasutaja' + this.newUser.username +'edukalt loodud!'
-      setTimeout(this.resetMessages,4000)
+      this.successMessage = 'Kasutaja ' + this.newUser.username + ' edukalt loodud!'
+      setTimeout(this.resetMessages, 4000)
       this.resetAllFields()
       this.delayedCloseModal()
     },
+
     handleAddNewUserError(error) {
-      this.errorResponse=error.response.data
-      if (this.userNameAlreadyExists(error)) {
-        this.displayUserNameAlreadyAlert();
+      this.errorResponse = error.response.data
+
+      if(this.userNameAlreadyExists(error)) {
+        this.displayUsernameAlreadyExistsAlert();
       } else {
         NavigationService.navigateToErrorView()
       }
     },
+
     userNameAlreadyExists(error) {
       return error.response.status === 403 && this.errorResponse.errorCode === 333;
     },
-    displayUserNameAlreadyAlert() {
-      this.errorMessage =this.errorResponse.message
-      setTimeout(this.resetMessages,4000)
+
+    displayUsernameAlreadyExistsAlert() {
+      this.errorMessage = this.errorResponse.message
+      setTimeout(this.resetMessages, 4000)
     },
 
     resetAllFields() {
-          this.newUser.username = ''
-          this.newUser.password= ''
-          this.passwordRepeat= ''
-          this.newUser.firstName=''
-          this.newUser.lastName=''
-          this.newUser.email=''
+      this.newUser.username = ''
+      this.newUser.password = ''
+      this.passwordRepeat = ''
+      this.newUser.firstName = ''
+      this.newUser.lastName = ''
+      this.newUser.email = ''
     },
+
     resetMessages() {
-      this.errorMessage=''
-      this.successMessage=''
+      this.errorMessage = ''
+      this.successMessage = ''
     },
+
     delayedCloseModal() {
       setTimeout(() => {
-        this.$emit('event-close-modal', 4000);
-      });
-    },
-  },
+        this.$emit('event-close-modal');
+      }, 4000);
+    }
+  }
 }
 </script>

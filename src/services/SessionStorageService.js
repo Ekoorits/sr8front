@@ -13,5 +13,9 @@ export default {
 
     isCustomer() {
       return sessionStorage.getItem('roleName') === 'customer'
+    },
+
+    getUserId(){
+        return sessionStorage.getItem('userId')
     }
 }

@@ -8,9 +8,9 @@
     </div>
     <div class="row">
       <div class="position-relative">
-        <i class="bi bi-search position-absolute"
-           style="left: 10px; top: 50%; transform: translateY(-50%);"></i>
-        <input type="text" class="form-control ps-5 rounded-pill" placeholder="Search">
+        <RecipeList :recipes="recipes" :selected-recipe-name="recipes.recipeName"
+
+        />
       </div>
     </div>
     <div class="row" style="padding:20px">
@@ -121,13 +121,47 @@
 </template>
 
 <script>
+import RecipeList from "@/components/recipe/RecipeList.vue";
+
 export default {
   name: 'SearchView',
+  components: {RecipeList},
   data() {
     return {
-      recipes: []
+      search: '',
+      recipes: [],
+
+      category:{
+        name:'',
+        description:''
+      },
+
+      recipe:{
+        recipeId:0,
+        recipeName: '',
+        authorName: '',
+        mealType: '',
+        difficultyLevelNumber: 0,
+        cookingTimeMinutesMax: 0,
+        pax: 0,
+        instructions: '',
+        imageData: '',
+      },
+
+      //Do we need separate column in database for recipe date or database can give us that data?
+
+
+      errorMessage: '',
+      successMessage: '',
+      errorResponse: {
+        message: '',
+        errorCode: 0
+      }
     }
   },
+
+
+  //Change to if message
   mounted() {
     fetch('/recipes')
         .then(res => res.json())

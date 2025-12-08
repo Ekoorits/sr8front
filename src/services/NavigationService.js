@@ -26,4 +26,8 @@ export default {
         router.push({name:'homeRouteUserLoggedIn'})
     },
 
+    navigateToMyRecipesView() {
+        router.push({name: 'myRecipesRoute'})
+    },
+
 }

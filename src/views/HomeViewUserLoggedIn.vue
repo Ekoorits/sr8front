@@ -1,25 +1,6 @@
 <template>
   <div class="container text-center">
 
-    <div>
-      <div class="container text-center" >
-        <div class="row justify-content-center mb-5">
-
-          <div class="col-auto">
-          <SmallButton label="Lisa retsept"/>
-          </div>
-
-          <div class="col-auto">
-            <SmallButton label="Minu retseptid"/>
-          </div>
-
-          <div class="col-auto">
-            <SmallButton label="Ostunimekirjad"/>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="row">
       <div class="col">
         <h1>Tee süüa targalt ja keskkonda säästvalt</h1>
@@ -50,6 +31,7 @@
 import NavigationService from "@/services/NavigationService";
 import SmallButton from "@/components/buttons/SmallButton.vue";
 import LargeButton from "@/components/buttons/LargeButton.vue";
+import navigationService from "@/services/NavigationService";
 
 export default {
   name: 'HomeViewUserLoggedIn',

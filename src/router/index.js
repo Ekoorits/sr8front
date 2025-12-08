@@ -5,6 +5,7 @@ import ErrorView from "@/views/ErrorView.vue";
 import RecipeDetailsView from "@/views/RecipeDetailsView.vue";
 import AddIngredientView from "@/views/AddIngredientView.vue";
 import HomeViewUserLoggedIn from "@/views/HomeViewUserLoggedIn.vue";
+import MyRecipesView from "@/views/MyRecipesView.vue";
 
 const routes = [
     {
@@ -16,6 +17,11 @@ const routes = [
         path: '/home',
         name: 'homeRouteUserLoggedIn',
         component: HomeViewUserLoggedIn
+    },
+    {
+        path: '/my-recipes',
+        name: 'myRecipesRoute',
+        component: MyRecipesView
     },
     {
         path: '/search',
@@ -43,7 +49,7 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
-//Minu jaoks segane koht. Kas ei peaks olema mujal?
+
 router.beforeEach((to, from, next) => {
     const loggedIn = sessionStorage.getItem('userId');
 

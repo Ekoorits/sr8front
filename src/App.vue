@@ -37,7 +37,7 @@
     </div>
   </nav>
 
-  <button v-if="!isLoggedIn" type="submit" class="btn btn-outline-success" @click="loginModalIsOpen=true">Logi sisse</button>
+  <button v-if="!isLoggedIn" type="submit" class="btn btn-outline-success mt-3" @click="loginModalIsOpen=true">Logi sisse</button>
 
   <router-view/>
 </template>

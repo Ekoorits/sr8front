@@ -1,6 +1,6 @@
 <template>
   <Modal :modal-is-open="newUserModalIsOpen"
-          @event-close-modal="$emit('event-close-modal')"
+         @event-close-modal="$emit('event-close-modal')"
   >
 
     <template #title>
@@ -52,6 +52,8 @@ import UserService from "@/services/UserService";
 import AlertDanger from "@/components/modal/alerts/AlertDanger.vue";
 import NavigationService from "@/services/NavigationService";
 import AlertSuccess from "@/components/modal/alerts/AlertSuccess.vue";
+import navigationService from "@/services/NavigationService";
+import LoginService from "@/services/LoginService";
 
 export default {
   name: 'NewUserModal',
@@ -60,7 +62,8 @@ export default {
     newUserModalIsOpen: Boolean
   },
   emits: [
-    'event-close-modal'
+    'event-close-modal',
+    'event-user-logged-in'
   ],
 
   data() {
@@ -85,24 +88,54 @@ export default {
   },
 
   methods: {
-
     executeAddNewUser() {
+      if (this.newUser.password !== this.passwordRepeat) {
+        this.errorMessage = 'Paroolid ei kattu';
+        setTimeout(this.resetMessages, 4000);
+        return;
+      }
       UserService.sendPostNewUserRequest(this.newUser)
           .then(() => this.handleAddNewUserResponse())
           .catch(error => this.handleAddNewUserError(error))
     },
 
     handleAddNewUserResponse() {
-      this.successMessage = 'Kasutaja ' + this.newUser.username + ' edukalt loodud!'
-      setTimeout(this.resetMessages, 4000)
-      this.resetAllFields()
-      this.delayedCloseModal()
+      this.successMessage = 'Kasutaja ' + this.newUser.username + ' edukalt loodud!';
+
+      // Uue kasutaja logitakse automaatselt sisse:
+      LoginService.sendGetLoginRequest(this.newUser.username, this.newUser.password)
+          .then(response => {
+            // Andmete lisamine session storage'sse
+            const loginResponse = response.data;
+            sessionStorage.setItem('userId', loginResponse.userId);
+            sessionStorage.setItem('roleName', loginResponse.roleName);
+            sessionStorage.setItem('userName', loginResponse.userName);
+
+            // Anname App.vue-le teada, et uus kasutaja on sisse logitud
+            this.updateNavMenuUserIsLoggedIn();
+
+            //Modali sulgemine, väljade tühjendamine, koduvaatele juhendamine
+            setTimeout(() => {
+              this.resetMessages();
+              this.resetAllFields();
+              this.$emit('event-close-modal');
+              navigationService.navigateToHomeViewUserLoggedIn();
+            }, 2000);
+          })
+          .catch(() => {
+            this.errorMessage = "Viga sisselogimisel peale kasutaja loomist.";
+            setTimeout(this.resetMessages, 4000);
+          });
+    },
+
+    updateNavMenuUserIsLoggedIn() {
+      this.$emit('event-user-logged-in')
     },
 
     handleAddNewUserError(error) {
       this.errorResponse = error.response.data
 
-      if(this.userNameAlreadyExists(error)) {
+      if (this.userNameAlreadyExists(error)) {
         this.displayUsernameAlreadyExistsAlert();
       } else {
         NavigationService.navigateToErrorView()
@@ -130,12 +163,6 @@ export default {
     resetMessages() {
       this.errorMessage = ''
       this.successMessage = ''
-    },
-
-    delayedCloseModal() {
-      setTimeout(() => {
-        this.$emit('event-close-modal');
-      }, 4000);
     }
   }
 }

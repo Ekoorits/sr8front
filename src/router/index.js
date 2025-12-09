@@ -4,7 +4,6 @@ import SearchView from "@/views/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import RecipeDetailsView from "@/views/RecipeDetailsView.vue";
 import RecipeIngredientView from "@/views/RecipeIngredientView.vue";
-import HomeViewUserLoggedIn from "@/views/HomeViewUserLoggedIn.vue";
 import MyRecipesView from "@/views/MyRecipesView.vue";
 import RecipeView from "@/views/RecipeView.vue";
 
@@ -13,11 +12,6 @@ const routes = [
         path: '/',
         name: 'homeRoute',
         component: HomeView
-    },
-    {
-        path: '/home',
-        name: 'homeRouteUserLoggedIn',
-        component: HomeViewUserLoggedIn
     },
     {
         path: '/my-recipes',
@@ -60,7 +54,7 @@ router.beforeEach((to, from, next) => {
     const loggedIn = sessionStorage.getItem('userId');
 
     if (to.path === '/' && loggedIn) {
-        next('/home');
+        next('/');
     } else {
         next();
     }

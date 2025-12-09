@@ -82,7 +82,7 @@ import MealTypeService from "@/services/MealTypeService";
 import DifficultyService from "@/services/DifficultyService";
 import NavigationService from "@/services/NavigationService";
 import CookingTimeService from "@/services/CookingTimeService";
-import LargeButton from "@/components/LargeButton.vue";
+import LargeButton from "@/components/buttons/LargeButton.vue";
 import NewRecipeService from "@/services/NewRecipeService";
 import ImageInput from "@/components/image/ImageInput.vue";
 

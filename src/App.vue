@@ -16,14 +16,14 @@
       <div class="col-auto">
         <div class="row">
           <div class="col-auto">
-            <SmallButton label="Lisa retsept"/>
+            <SmallButton label="Lisa retsept" @event-button-is-pressed="toRecipeDetailsView"/>
           </div>
           <div class="col-auto">
             <SmallButton v-if="!isMyRecipesView" label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
             <SmallButton v-else label="Kodu" @event-button-is-pressed="toHomeView"/>
           </div>
           <div class="col-auto">
-            <SmallButton label="Ostunimekirjad"/>
+            <SmallButton label="Ostunimekirjad" @event-button-is-pressed="toShoppingLists"/>
           </div>
         </div>
       </div>
@@ -49,6 +49,7 @@ import NewUserModal from "@/components/modal/custom/NewUserModal.vue";
 import router from "@/router";
 import SmallButton from "@/components/buttons/SmallButton.vue";
 import navigationService from "@/services/NavigationService";
+import NavigationService from "@/services/NavigationService";
 
 export default {
   name: 'App',
@@ -84,8 +85,17 @@ export default {
       navigationService.navigateToMyRecipesView()
     },
     toHomeView() {
-      navigationService.navigateToHomeViewUserLoggedIn()
+      NavigationService.navigateToHomeView()
     },
+
+    toShoppingLists() {
+      NavigationService.navigateToShoppingListsView()
+    },
+
+    toRecipeDetailsView() {
+      NavigationService.navigateToRecipeDetailsView()
+    },
+
     handleUserLogout() {
       sessionStorage.clear();
       this.isLoggedIn = false;

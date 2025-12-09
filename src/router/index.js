@@ -8,6 +8,7 @@ import MyRecipesView from "@/views/MyRecipesView.vue";
 import RecipeView from "@/views/RecipeView.vue";
 import ShoppingListsView from "@/views/ShoppingListsView.vue";
 import ShoppingListView from "@/views/ShoppingListView.vue";
+import ShoppingRecipesView from "@/views/ShoppingRecipesView.vue";
 
 const routes = [
     {
@@ -56,9 +57,9 @@ const routes = [
         component: ShoppingListView
     },
     {
-        path: '/shopping-list',
-        name: 'shoppingListRoute',
-        component: ShoppingListView
+        path: '/shopping-recipes',
+        name: 'shoppingRecipesRoute',
+        component: ShoppingRecipesView
     }
 ]
 

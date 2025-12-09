@@ -33,7 +33,27 @@
       </div>
       <div class="row mb-3">
         <div class="col">
-          <h1>SIIA TULEB KOOSTISOSADE TABEL</h1>
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Koostisosa</th>
+              <th scope="col">Kogus</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Piim</td>
+              <td>300 ml</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Muna</td>
+              <td>5000 g</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="row mb-3">

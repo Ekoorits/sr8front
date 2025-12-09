@@ -7,25 +7,23 @@
       </div>
     </div>
 
+    <!-- 🔍 Поиск + список названий -->
     <div class="row">
       <div class="position-relative">
-        <!-- ВАЖНО: тут передаём МАССИВ recipes и selectedRecipeId -->
         <RecipeList
             :recipes="recipes"
             :selected-recipe-id="selectedRecipeId"
             @event-recipe-selected="onRecipeSelected"
+            @event-search-text-changed="onSearchTextChanged"
         />
       </div>
     </div>
 
-    <!-- всё, что ниже — твой дизайн фильтров и карточки, я не трогала -->
-
+    <!-- Фильтры -->
     <div class="row" style="padding:20px">
       <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
-
         <span class="fw-semibold">Filtreeri:</span>
 
-        <!-- Kategooria -->
         <div class="dropdown">
           <a class="dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
             Kategooria
@@ -36,7 +34,6 @@
           </ul>
         </div>
 
-        <!-- Raskusaste -->
         <div class="dropdown">
           <a class="dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
             Raskusaste
@@ -47,7 +44,6 @@
           </ul>
         </div>
 
-        <!-- Valmistusaeg -->
         <div class="dropdown">
           <a class="dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
             Valmistusaeg
@@ -59,7 +55,6 @@
           </ul>
         </div>
 
-        <!-- All Filters -->
         <div class="dropdown">
           <a class="dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-funnel"></i> Kõik filtrid
@@ -71,7 +66,6 @@
 
         <span class="mx-2">|</span>
 
-        <!-- Sort -->
         <div class="dropdown">
           <a class="dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
             ↓↑ Sort: Uuemad
@@ -83,41 +77,16 @@
           </ul>
         </div>
 
-        <!-- View mode -->
         <div class="d-flex align-items-center gap-2">
           <i class="bi bi-list" style="cursor: pointer; font-size: 18px;"></i>
           <i class="bi bi-grid" style="cursor: pointer; font-size: 18px;"></i>
         </div>
-
       </div>
-
     </div>
 
+    <!-- 🧩 Карточки рецептов -->
     <div class="row">
-      <div class="recipe-card shadow-sm rounded-4 overflow-hidden bg-white" style="width: 260px;">
-        <div class="position-relative">
-          <img src="IMAGE_URL"
-               alt="Retsepti pilt"
-               style="width: 100%; height: 160px; object-fit: cover;">
-          <div class="position-absolute top-0 end-0 m-2 bg-primary text-white rounded-circle p-2"
-               style="cursor:pointer;">
-            🛒
-          </div>
-          <div class="position-absolute bottom-0 end-0 m-2 bg-white rounded-circle p-2 shadow"
-               style="cursor:pointer;">
-            ⭐
-          </div>
-        </div>
-        <div class="p-3">
-          <h5 class="fw-semibold mb-2" style="font-size: 16px;">
-            {{ recipe.recipeName || 'Retsepti nimi' }}
-          </h5>
-          <div class="text-muted" style="font-size: 14px;">
-            {{ recipe.cookingTimeMinutesMax || '25' }}min •
-            {{ recipe.difficultyLevelNumber || 'Lihtne' }}
-          </div>
-        </div>
-      </div>
+      <RecipeCards :recipes="recipes" />
     </div>
 
   </div>
@@ -125,20 +94,16 @@
 
 <script>
 import RecipeList from "@/components/recipe/RecipeList.vue";
+import RecipeCards from "@/components/recipe/RecipeCards.vue";
 
 export default {
   name: 'SearchView',
-  components: { RecipeList },
+  components: { RecipeList, RecipeCards },
 
   data() {
     return {
-      // массив из БД
       recipes: [],
-
-      // id выбранного рецепта (для ребёнка)
       selectedRecipeId: 0,
-
-      // объект выбранного рецепта (для карточки справа/снизу)
       recipe: {
         recipeId: 0,
         recipeName: '',
@@ -150,12 +115,10 @@ export default {
         instructions: '',
         imageData: ''
       },
-
       category: {
         name: '',
         description: ''
       },
-
       errorMessage: '',
       successMessage: '',
       errorResponse: {
@@ -166,29 +129,34 @@ export default {
   },
 
   methods: {
-    // ловим событие от RecipeList
     onRecipeSelected(recipeId) {
       this.selectedRecipeId = recipeId
-
-      // находим рецепт в массиве и кладём в this.recipe
       const found = this.recipes.find(r => r.recipeId === recipeId)
       if (found) {
         this.recipe = found
       }
+    },
+
+    onSearchTextChanged(searchText) {
+      fetch('/recipes?searchParam=' + encodeURIComponent(searchText))
+          .then(res => res.json())
+          .then(data => {
+            const list = Array.isArray(data[0]) ? data[0] : data
+            this.recipes = list.map(r => ({
+              ...r,
+              recipeName: r.recipeName || r.name || '',
+              authorName: r.authorName || r.author || ''
+            }))
+          })
+          .catch(err => {
+            console.error(err)
+            this.errorMessage = 'Viga retseptide laadimisel'
+          })
     }
   },
 
   mounted() {
-    // грузим данные из БД при заходе на страницу
-    fetch('/recipes')
-        .then(res => res.json())
-        .then(data => {
-          this.recipes = data
-        })
-        .catch(err => {
-          console.error(err)
-          this.errorMessage = 'Viga retseptide laadimisel'
-        })
+    this.onSearchTextChanged('')
   }
 }
 </script>

@@ -1,29 +1,23 @@
 <template>
   <div>
-    <!-- строка поиска -->
-    <div class="position-relative mb-3">
-      <i class="bi bi-search position-absolute"
-         style="left: 10px; top: 50%; transform: translateY(-50%);"></i>
+    <!-- только строка поиска с кнопкой -->
+    <div class="input-group mb-3" style="max-width: 800px; margin: 0 auto;">
+      <span class="input-group-text bg-white border-end-0">
+        <i class="bi bi-search"></i>
+      </span>
 
       <input
-          v-model="searchText"
+          ref="searchField"
           type="text"
-          class="form-control ps-5 rounded-pill"
+          class="form-control border-start-0"
           placeholder="Otsi retsepti..."
+          @keyup.enter="runSearch"
       >
-    </div>
 
-    <!-- список найденных рецептов -->
-    <ul class="list-group">
-      <li
-          v-for="recipe in filteredRecipes"
-          :key="recipe.recipeId"
-          class="list-group-item list-group-item-action"
-          @click="selectRecipe(recipe.recipeId)"
-      >
-        {{ recipe.recipeName }}
-      </li>
-    </ul>
+      <button class="btn btn-primary" @click="runSearch">
+        Otsi
+      </button>
+    </div>
   </div>
 </template>
 
@@ -31,40 +25,10 @@
 export default {
   name: 'RecipeList',
 
-  props: {
-    // массив рецептов из родителя
-    recipes: {
-      type: Array,
-      default: () => []
-    },
-    // id выбранного рецепта (если нужно подсвечивать)
-    selectedRecipeId: {
-      type: Number,
-      default: 0
-    }
-  },
-
-  data () {
-    return {
-      searchText: ''
-    }
-  },
-
-  computed: {
-    filteredRecipes () {
-      const text = this.searchText.toLowerCase().trim()
-      if (!text) {
-        return this.recipes
-      }
-      return this.recipes.filter(r =>
-          String(r.recipeName).toLowerCase().includes(text)
-      )
-    }
-  },
-
   methods: {
-    selectRecipe (selectedRecipeId) {
-      this.$emit('event-recipe-selected', Number(selectedRecipeId))
+    runSearch() {
+      const value = this.$refs.searchField.value.trim()
+      this.$emit('event-search-text-changed', value)
     }
   }
 }

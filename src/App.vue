@@ -9,31 +9,35 @@
                 @event-user-logged-in="handleUserLoggedIn"
   />
 
-  <nav v-if="isLoggedIn">
-
-    <button v-if="!isLoggedIn" type="submit" class="btn btn-outline-success" @click="loginModalIsOpen=true">Logi sisse</button>
-    <div v-if="isLoggedIn" @click="handleUserLogout" style="float: right; text-align: center; cursor: pointer; margin-right: 20px;">
-      <font-awesome-icon icon="fa-solid fa-person-walking-arrow-right" size="2x"/>
-      <div>{{ username }}</div>
-    </div>
-
-    <div class="container text-center">
-      <div class="row justify-content-center mb-5">
-        <div class="col-auto">
-          <SmallButton label="Lisa retsept"/>
+  <nav v-if="isLoggedIn" class="p-3">
+    <div class="row align-items-center">
+      <div class="col">
+      </div>
+      <div class="col-auto">
+        <div class="row">
+          <div class="col-auto">
+            <SmallButton label="Lisa retsept"/>
+          </div>
+          <div class="col-auto">
+            <SmallButton v-if="!isMyRecipesView" label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
+            <SmallButton v-else label="Kodu" @event-button-is-pressed="toHomeView"/>
+          </div>
+          <div class="col-auto">
+            <SmallButton label="Ostunimekirjad"/>
+          </div>
         </div>
-        <div class="col-auto">
-          <SmallButton v-if="!isMyRecipesView" label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
-          <SmallButton v-else label="Kodu" @event-button-is-pressed="toHomeView"/>
-        </div>
-        <div class="col-auto">
-          <SmallButton label="Ostunimekirjad"/>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <!-- Logout icon aligned to the right -->
+        <div @click="handleUserLogout" style="text-align: center; cursor: pointer;">
+          <font-awesome-icon icon="fa-solid fa-person-walking-arrow-right" size="2x"/>
+          <div>{{ username }}</div>
         </div>
       </div>
     </div>
-
   </nav>
 
+  <button v-if="!isLoggedIn" type="submit" class="btn btn-outline-success" @click="loginModalIsOpen=true">Logi sisse</button>
 
   <router-view/>
 </template>

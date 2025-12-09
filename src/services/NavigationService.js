@@ -30,4 +30,8 @@ export default {
         router.push({name: 'myRecipesRoute'})
     },
 
+    navigateToRecipeView(recipeId) {
+        router.push({name: 'recipeRoute', params: {recipeId: recipeId}})
+    },
+
 }

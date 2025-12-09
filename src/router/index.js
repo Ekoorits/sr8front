@@ -3,9 +3,10 @@ import HomeView from '../views/HomeView.vue'
 import SearchView from "@/views/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import RecipeDetailsView from "@/views/RecipeDetailsView.vue";
-import AddIngredientView from "@/views/AddIngredientView.vue";
+import RecipeIngredientView from "@/views/RecipeIngredientView.vue";
 import HomeViewUserLoggedIn from "@/views/HomeViewUserLoggedIn.vue";
 import MyRecipesView from "@/views/MyRecipesView.vue";
+import RecipeView from "@/views/RecipeView.vue";
 
 const routes = [
     {
@@ -41,7 +42,12 @@ const routes = [
     {
         path: '/recipe/ingredient',
         name: 'recipeIngredientRoute',
-        component: AddIngredientView
+        component: RecipeIngredientView
+    },
+    {
+        path: '/recipe',
+        name: 'recipeRoute',
+        component: RecipeView
     }
 ]
 

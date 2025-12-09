@@ -10,7 +10,9 @@ export default {
       required: true
     }
   },
-  emits: ['event-button-is-pressed'],
+  emits: [
+      'event-button-is-pressed'
+  ],
   methods: {
     handleClick() {
       this.$emit('event-button-is-pressed');

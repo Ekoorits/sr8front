@@ -2,7 +2,7 @@
   <div class="container text-center">
     <div class="row">
       <div class="col">
-        Lisa koostisosad
+
       </div>
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'recipeIngredientView',
+  name: 'RecipeView',
   data() {
     return {}
   },

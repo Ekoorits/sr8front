@@ -15,12 +15,14 @@
       </div>
       <div class="col-auto">
         <div class="row">
+          <div v-if="!isHomeView" class="col-auto">
+            <SmallButton label="Kodu" @event-button-is-pressed="toHomeView"/>
+          </div>
           <div class="col-auto">
             <SmallButton label="Lisa retsept" @event-button-is-pressed="toRecipeDetailsView"/>
           </div>
           <div class="col-auto">
-            <SmallButton v-if="!isMyRecipesView" label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
-            <SmallButton v-else label="Kodu" @event-button-is-pressed="toHomeView"/>
+            <SmallButton label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
           </div>
           <div class="col-auto">
             <SmallButton label="Ostunimekirjad" @event-button-is-pressed="toShoppingLists"/>
@@ -65,6 +67,10 @@ export default {
   computed: {
     isMyRecipesView() {
       return this.$route.name === 'myRecipesRoute';
+    },
+
+    isHomeView() {
+      return this.$route.name === 'homeRoute'
     }
   },
   methods: {
@@ -108,6 +114,6 @@ export default {
     if (this.isLoggedIn) {
       this.username = sessionStorage.getItem('userName');
     }
-  }
+  },
 }
 </script>

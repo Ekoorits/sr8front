@@ -68,14 +68,4 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    const loggedIn = sessionStorage.getItem('userId');
-
-    if (to.path === '/' && loggedIn) {
-        next('/');
-    } else {
-        next();
-    }
-});
-
 export default router

@@ -1,11 +1,12 @@
 import axios from "axios";
 
+let preferValue;
 export default {
 
-    sendGetLoginRequest(username, password) {
+    sendGetLoginRequest(username, password, prefer = preferValue) {
 
         return axios.get('/login', {
-            headers: {Prefer: preferValue, Accept: 'application/json'},
+            headers: {Prefer: prefer, Accept: 'application/json'},
             params: {
                 username: username,
                 password: password

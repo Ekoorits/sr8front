@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <!-- 🔍 Поиск + список названий -->
+    <!-- 🔍 Поиск -->
     <div class="row">
       <div class="position-relative">
         <RecipeList
@@ -93,17 +93,18 @@
 </template>
 
 <script>
-import RecipeList from "@/components/recipe/RecipeList.vue";
-import RecipeCards from "@/components/recipe/RecipeCards.vue";
+import RecipeList from '@/components/recipe/RecipeList.vue'
+import RecipeCards from '@/components/recipe/RecipeCards.vue'
 
 export default {
   name: 'SearchView',
   components: { RecipeList, RecipeCards },
 
-  data() {
+  data () {
     return {
       recipes: [],
       selectedRecipeId: 0,
+
       recipe: {
         recipeId: 0,
         recipeName: '',
@@ -115,10 +116,12 @@ export default {
         instructions: '',
         imageData: ''
       },
+
       category: {
         name: '',
         description: ''
       },
+
       errorMessage: '',
       successMessage: '',
       errorResponse: {
@@ -129,7 +132,7 @@ export default {
   },
 
   methods: {
-    onRecipeSelected(recipeId) {
+    onRecipeSelected (recipeId) {
       this.selectedRecipeId = recipeId
       const found = this.recipes.find(r => r.recipeId === recipeId)
       if (found) {
@@ -137,25 +140,61 @@ export default {
       }
     },
 
-    onSearchTextChanged(searchText) {
+    // поиск по названию
+    onSearchTextChanged (searchText) {
       fetch('/recipes?searchParam=' + encodeURIComponent(searchText))
           .then(res => res.json())
           .then(data => {
             const list = Array.isArray(data[0]) ? data[0] : data
+
             this.recipes = list.map(r => ({
               ...r,
               recipeName: r.recipeName || r.name || '',
-              authorName: r.authorName || r.author || ''
+              authorName: r.authorName || r.author || '',
+              imageData: r.imageData || ''
             }))
+
+            this.loadImagesForRecipes()
           })
           .catch(err => {
             console.error(err)
             this.errorMessage = 'Viga retseptide laadimisel'
           })
+    },
+
+    // подгружаем картинки отдельным запросом
+    loadImagesForRecipes () {
+      this.recipes.forEach(recipe => {
+        if (!recipe.recipeId) return
+
+        fetch('/recipes/image?recipeId=' + recipe.recipeId)
+            .then(res => res.text())
+            .then(text => {
+              // если бэк вернул пустое тело — просто выходим
+              if (!text) {
+                return
+              }
+
+              let imgDto
+              try {
+                imgDto = JSON.parse(text)
+              } catch (e) {
+                console.error('Pildi JSON parsimise viga', e)
+                return
+              }
+
+              if (imgDto && imgDto.imageData) {
+                recipe.imageData = imgDto.imageData
+              }
+            })
+            .catch(err => {
+              console.error('Viga pildi laadimisel', err)
+            })
+      })
     }
   },
 
-  mounted() {
+  mounted () {
     this.onSearchTextChanged('')
   }
 }

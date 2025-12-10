@@ -8,8 +8,8 @@
     </div>
     <div class="row mt-1 mb-3">
       <div class="col">
-        <AlertSuccess :alert-message="this.successMessage" @event-alert-box-closed="resetMessages" />
-        <AlertDanger :alert-message="this.errorMessage" @event-alert-box-closed="resetMessages"/>
+        <AlertSuccess :alert-message="successMessage" @event-alert-box-closed="resetMessages"/>
+        <AlertDanger :alert-message="errorMessage" @event-alert-box-closed="resetMessages"/>
       </div>
     </div>
 
@@ -22,8 +22,8 @@
       </div>
       <div class="col-2">
         <div class="form-floating mb-3 ">
-          <input v-model="newRecipeIngredient.amount" type="number" min="1" class="form-control" placeholder="Kogus">
-          <label>Kogus {{this.convertMeasureUnitToName(this.newRecipeIngredient.measureUnit)}}</label>
+          <input v-model="ingredientAmount" type="number" min="1" class="form-control" placeholder="Kogus">
+          <label>Kogus</label>
         </div>
       </div>
       <div class="col-2">
@@ -69,16 +69,22 @@
 <script>
 import SearchService from "@/services/SearchService";
 import SmallButton from "@/components/buttons/SmallButton.vue";
-import NewRecipeIngredientService from "@/services/NewRecipeIngredientService";
 import AlertSuccess from "@/components/modal/alerts/AlertSuccess.vue";
 import AlertDanger from "@/components/modal/alerts/AlertDanger.vue";
 import NavigationService from "@/services/NavigationService";
+import RecipeIngredientService from "@/services/RecipeIngredientService";
+import {useRoute} from "vue-router";
 
 export default {
   name: 'recipeIngredientView',
   components: {AlertDanger, AlertSuccess, SmallButton},
   data() {
     return {
+
+      recipeId: Number(useRoute().query.recipeId),
+      ingredientId: 0,
+      ingredientAmount: 0,
+
 
       errorMessage: '',
       successMessage: '',
@@ -101,7 +107,7 @@ export default {
     },
 
     executeAddRecipeIngredient() {
-      NewRecipeIngredientService.sendPostAddRecipeIngredientRequest(this.newRecipeIngredient)
+      RecipeIngredientService.sendPostAddRecipeIngredientRequest(this.recipeId, this.ingredientId, this.ingredientAmount)
           .then(() => this.handleAddRecipeIngredientResponse())
           .catch(() => this.handleAddRecipeIngredientResponseError())
     },
@@ -117,14 +123,15 @@ export default {
     },
 
     searchIngredients() {
-      if(this.searchParam.length >= 3) {
+      if (this.searchParam.length >= 3) {
         SearchService.sendGetRecipeIngredientRequest(this.searchParam)
-            .then(response => {})
+            .then(response => {
+            })
       }
     },
 
     convertMeasureUnitToName(measureUnit) {
-      if(measureUnit === 'g') {
+      if (measureUnit === 'g') {
         return this.measureUnitName = 'grammides'
       } else if (measureUnit === 'ml') {
         return this.measureUnitName = 'milliliitrites'

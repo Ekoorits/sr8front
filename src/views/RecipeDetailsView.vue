@@ -83,8 +83,8 @@ import DifficultyService from "@/services/DifficultyService";
 import NavigationService from "@/services/NavigationService";
 import CookingTimeService from "@/services/CookingTimeService";
 import LargeButton from "@/components/buttons/LargeButton.vue";
-import NewRecipeService from "@/services/NewRecipeService";
 import ImageInput from "@/components/image/ImageInput.vue";
+import RecipeService from "@/services/RecipeService";
 
 export default {
   name: 'RecipeDetails',
@@ -129,13 +129,14 @@ export default {
   methods: {
 
     executeAddNewRecipe() {
-    NewRecipeService.sendPostNewRecipeRequest(this.newRecipe)
-        .then(() => this.handleAddNewRecipeResponse())
+    RecipeService.sendPostRecipeDetailRequest(this.newRecipe)
+        .then(response => this.handleAddNewRecipeResponse(response))
         .catch(() => NavigationService.navigateToErrorView())
     },
 
-    handleAddNewRecipeResponse() {
-      NavigationService.navigateToAddIngredientView()
+    handleAddNewRecipeResponse(response) {
+      let recipeId = response.data
+      NavigationService.navigateToAddIngredientView(recipeId)
     },
 
     returnToHomeScreen() {

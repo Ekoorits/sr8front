@@ -7,7 +7,6 @@
       </div>
     </div>
 
-    <!-- 🔍 Поиск -->
     <div class="row">
       <div class="position-relative">
         <RecipesSearch
@@ -83,10 +82,11 @@
         </div>
       </div>
     </div>
-
-    <!-- 🧩 Карточки рецептов -->
     <div class="row">
-      <RecipeCards :recipes="recipes" />
+      <RecipeCards
+          :recipes="recipes"
+          @event-add-to-shopping-list="onAddToShoppingList"
+      />
     </div>
 
   </div>
@@ -95,7 +95,9 @@
 <script>
 import RecipesSearch from '@/components/recipe/RecipesSearch.vue'
 import RecipeCards from '@/components/recipe/RecipeCards.vue'
-import RecipeService from "@/services/RecipeService";
+import RecipeService from '@/services/RecipeService'
+import ShoppingListService from '@/services/ShoppingListService'
+import NavigationService from '@/services/NavigationService'
 
 export default {
   name: 'SearchView',
@@ -103,7 +105,6 @@ export default {
 
   data () {
     return {
-
       recipes: [
         {
           recipeId: 0,
@@ -151,42 +152,19 @@ export default {
       }
     },
 
-    // поиск по названию
-    onSearchTextChanged(searchText) {
-        RecipeService.sendGetRecipesRequest(searchText)
-            .then(response => this.recipes = response.data)
-            .catch()
+    onSearchTextChanged (searchText) {
+      RecipeService.sendGetRecipesRequest(searchText)
+          .then(response => this.recipes = response.data)
+          .catch(() => {})
     },
 
-    // подгружаем картинки отдельным запросом
-    loadImagesForRecipes () {
-      this.recipes.forEach(recipe => {
-        if (!recipe.recipeId) return
-
-        fetch('/recipes/image?recipeId=' + recipe.recipeId)
-            .then(res => res.text())
-            .then(text => {
-              // если бэк вернул пустое тело — просто выходим
-              if (!text) {
-                return
-              }
-
-              let imgDto
-              try {
-                imgDto = JSON.parse(text)
-              } catch (e) {
-                console.error('Pildi JSON parsimise viga', e)
-                return
-              }
-
-              if (imgDto && imgDto.imageData) {
-                recipe.imageData = imgDto.imageData
-              }
-            })
-            .catch(err => {
-              console.error('Viga pildi laadimisel', err)
-            })
-      })
+    onAddToShoppingList (recipeId) {
+      ShoppingListService.sendAddRecipeToShoppingListRequest(
+          recipeId,
+          null
+      )
+          .then(() => {})
+          .catch(() => NavigationService.navigateToErrorView())
     }
   },
 

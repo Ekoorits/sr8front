@@ -22,8 +22,13 @@ export default {
         router.push({name: 'recipeDetailsRoute'})
     },
 
-    navigateToAddIngredientView() {
-        router.push({name: 'recipeIngredientRoute'})
+    navigateToAddIngredientView(recipeId) {
+        router.push({
+            name: 'recipeIngredientRoute',
+            query: {
+                recipeId: recipeId
+            }
+        })
     },
 
     navigateToHomeViewUserLoggedIn() {

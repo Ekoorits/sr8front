@@ -10,6 +10,9 @@
 <script>
 export default {
   name: 'AlertDanger',
+  emits: [
+    'event-alert-box-closed'
+  ],
   props: {
     alertMessage: String,
   }

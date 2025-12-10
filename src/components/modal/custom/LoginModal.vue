@@ -42,7 +42,6 @@ import NewUserModal from "@/components/modal/custom/NewUserModal.vue";
 import LoginService from "@/services/LoginService";
 import NavigationService from "@/services/NavigationService";
 import AlertDanger from "@/components/modal/alerts/AlertDanger.vue";
-import navigationService from "@/services/NavigationService";
 
 export default {
   name: 'LoginModal',
@@ -100,8 +99,6 @@ export default {
       this.setSessionStorageItems();
       this.updateNavMenuUserIsLoggedIn();
       this.$emit('event-close-modal')
-      navigationService.navigateToHomeViewUserLoggedIn()
-
     },
 
     setSessionStorageItems() {

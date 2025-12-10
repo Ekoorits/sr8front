@@ -16,4 +16,20 @@ export default {
             }
         })
     },
+
+    sendGetUserRecipes(userId){
+        return axios.get('/my-recipes',{
+            params: {
+                userId: userId
+            }
+        })
+    },
+
+    sendGetRecipe(recipeId) {
+        return axios.get('/recipe', {
+            params: {
+                recipeId: recipeId
+            }
+        })
+    },
 }

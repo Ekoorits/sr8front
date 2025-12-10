@@ -50,7 +50,6 @@ import LoginModal from "@/components/modal/custom/LoginModal.vue";
 import NewUserModal from "@/components/modal/custom/NewUserModal.vue";
 import router from "@/router";
 import SmallButton from "@/components/buttons/SmallButton.vue";
-import navigationService from "@/services/NavigationService";
 import NavigationService from "@/services/NavigationService";
 
 export default {
@@ -88,7 +87,7 @@ export default {
       this.username = sessionStorage.getItem('userName');
     },
     toMyRecipesView() {
-      navigationService.navigateToMyRecipesView()
+      NavigationService.navigateToMyRecipesView()
     },
     toHomeView() {
       NavigationService.navigateToHomeView()

@@ -9,10 +9,14 @@ export default {
         return axios.post('/recipe/detail', newRecipe)
     },
 
-    sendGetRecipesRequest(searchParam) {
+    sendGetRecipesRequest(searchParam, cookingTimeId, difficultyId, mealTypeId, sort) {
         return axios.get('/recipes', {
             params: {
-                searchParam: searchParam
+                searchParam: searchParam || "",     // как было раньше
+                cookingTimeId: cookingTimeId ?? null,
+                difficultyId: difficultyId ?? null,
+                mealTypeId: mealTypeId ?? null,
+                sort: sort || "NEWEST",
             }
         })
     },

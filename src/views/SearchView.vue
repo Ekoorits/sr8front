@@ -87,7 +87,7 @@ export default {
   methods: {
     loadRecipes () {
       RecipeService.sendGetRecipesRequest(
-          this.searchText,                  // searchParam
+          this.searchText,
           this.filters.cookingTimeId,
           this.filters.difficultyId,
           this.filters.mealTypeId,
@@ -96,9 +96,11 @@ export default {
           .then(response => {
             this.recipes = response.data
           })
-          .catch(() => {
-            // можно добавить обработку ошибки
-          })
+          .catch(() => {})
+    },
+    onFiltersChanged(newFilters) {
+      this.filters = newFilters
+      this.loadRecipes()
     },
 
     onRecipeSelected (recipeId) {
@@ -110,10 +112,6 @@ export default {
     },
     onSearchTextChanged (searchText) {
       this.searchText = searchText
-      this.loadRecipes()
-    },
-    onFiltersChanged (newFilters) {
-      this.filters = newFilters
       this.loadRecipes()
     },
 

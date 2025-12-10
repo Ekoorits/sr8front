@@ -3,15 +3,27 @@
     <span class="fw-semibold">Filtreeri:</span>
 
     <div class="filter-dropdown">
-      <MealTypeDropdown @change="onMealTypeChange" />
+      <MealTypeDropdown
+          :meal-types="mealTypes"
+          :selected-meal-type="selectedMealType"
+          @event-new-meal-type-selected="onMealTypeChange"
+      />
     </div>
 
     <div class="filter-dropdown">
-      <DifficultiesDropdown @change="onDifficultyChange" />
+      <DifficultiesDropdown
+          :difficulties="difficulties"
+          :selected-difficulty="selectedDifficulty"
+          @event-new-difficulty-selected="onDifficultyChange"
+      />
     </div>
 
     <div class="filter-dropdown">
-      <CookingTimeDropdown @change="onCookingTimeChange" />
+      <CookingTimeDropdown
+          :cooking-times="cookingTimes"
+          :selected-cooking-time="selectedCookingTime"
+          @event-new-cooking-time-selected="onCookingTimeChange"
+      />
     </div>
 
     <span class="mx-2 text-muted">|</span>
@@ -49,6 +61,10 @@ import CookingTimeDropdown from '@/components/dropdowns/CookingTimeDropdown.vue'
 import DifficultiesDropdown from '@/components/dropdowns/DifficultiesDropdown.vue'
 import MealTypeDropdown from '@/components/dropdowns/MealTypeDropdown.vue'
 
+import MealTypeService from '@/services/MealTypeService'
+import DifficultyService from '@/services/DifficultyService'
+import CookingTimeService from '@/services/CookingTimeService'
+
 export default {
   name: 'RecipeFilter',
   components: {
@@ -65,12 +81,46 @@ export default {
         mealTypeId: null,
       },
       sort: 'NEWEST',
+
+      // для MealTypeDropdown
+      mealTypes: [],
+      selectedMealType: '',
+
+      // для DifficultiesDropdown
+      difficulties: [],
+      selectedDifficulty: '',
+
+      // для CookingTimeDropdown
+      cookingTimes: [],
+      selectedCookingTime: ''
     }
   },
   computed: {
     sortLabel() {
       return this.sort === 'NEWEST' ? 'Uuemad' : 'Vanaimad'
     },
+  },
+  mounted() {
+    // Toidukord
+    MealTypeService.sendGetMealTypesRequest()
+        .then(response => {
+          this.mealTypes = response.data
+        })
+        .catch(() => {})
+
+    // Raskusaste
+    DifficultyService.sendGetDifficultiesRequest()
+        .then(response => {
+          this.difficulties = response.data
+        })
+        .catch(() => {})
+
+    // Valmistusaeg
+    CookingTimeService.sendGetCookingTimeRequest()
+        .then(response => {
+          this.cookingTimes = response.data
+        })
+        .catch(() => {})
   },
   methods: {
     emitChange() {
@@ -79,22 +129,30 @@ export default {
         sort: this.sort,
       })
     },
-    onCookingTimeChange(id) {
-      this.filters.cookingTimeId = id
+
+    onMealTypeChange(value) {
+      this.selectedMealType = value
+      this.filters.mealTypeId = value   // если бэк фильтрует по названию
       this.emitChange()
     },
-    onDifficultyChange(id) {
-      this.filters.difficultyId = id
+
+    onDifficultyChange(value) {
+      this.selectedDifficulty = value
+      this.filters.difficultyId = value
       this.emitChange()
     },
-    onMealTypeChange(id) {
-      this.filters.mealTypeId = id
+
+    onCookingTimeChange(value) {
+      this.selectedCookingTime = value
+      this.filters.cookingTimeId = value
       this.emitChange()
     },
+
     onSortChange(value) {
       this.sort = value
       this.emitChange()
     },
+
     clearFilters() {
       this.filters = {
         cookingTimeId: null,
@@ -102,6 +160,9 @@ export default {
         mealTypeId: null,
       }
       this.sort = 'NEWEST'
+      this.selectedMealType = ''
+      this.selectedDifficulty = ''
+      this.selectedCookingTime = ''
       this.emitChange()
     },
   },

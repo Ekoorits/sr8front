@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'RecipeList',
+  name: 'RecipesSearch',
 
   methods: {
     runSearch() {

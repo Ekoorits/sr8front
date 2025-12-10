@@ -10,7 +10,7 @@
     <!-- 🔍 Поиск -->
     <div class="row">
       <div class="position-relative">
-        <RecipeList
+        <RecipesSearch
             :recipes="recipes"
             :selected-recipe-id="selectedRecipeId"
             @event-recipe-selected="onRecipeSelected"
@@ -93,16 +93,27 @@
 </template>
 
 <script>
-import RecipeList from '@/components/recipe/RecipeList.vue'
+import RecipesSearch from '@/components/recipe/RecipesSearch.vue'
 import RecipeCards from '@/components/recipe/RecipeCards.vue'
+import RecipeService from "@/services/RecipeService";
 
 export default {
   name: 'SearchView',
-  components: { RecipeList, RecipeCards },
+  components: { RecipesSearch, RecipeCards },
 
   data () {
     return {
-      recipes: [],
+
+      recipes: [
+        {
+          recipeId: 0,
+          name: '',
+          pax: 0,
+          author: '',
+          imageData: ''
+        }
+      ],
+
       selectedRecipeId: 0,
 
       recipe: {
@@ -141,25 +152,10 @@ export default {
     },
 
     // поиск по названию
-    onSearchTextChanged (searchText) {
-      fetch('/recipes?searchParam=' + encodeURIComponent(searchText))
-          .then(res => res.json())
-          .then(data => {
-            const list = Array.isArray(data[0]) ? data[0] : data
-
-            this.recipes = list.map(r => ({
-              ...r,
-              recipeName: r.recipeName || r.name || '',
-              authorName: r.authorName || r.author || '',
-              imageData: r.imageData || ''
-            }))
-
-            this.loadImagesForRecipes()
-          })
-          .catch(err => {
-            console.error(err)
-            this.errorMessage = 'Viga retseptide laadimisel'
-          })
+    onSearchTextChanged(searchText) {
+        RecipeService.sendGetRecipesRequest(searchText)
+            .then(response => this.recipes = response.data)
+            .catch()
     },
 
     // подгружаем картинки отдельным запросом

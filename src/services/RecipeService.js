@@ -8,4 +8,12 @@ export default {
     sendPostRecipeDetailRequest(newRecipe) {
         return axios.post('/recipe/detail', newRecipe)
     },
+
+    sendGetRecipesRequest(searchParam) {
+        return axios.get('/recipes', {
+            params: {
+                searchParam: searchParam
+            }
+        })
+    },
 }

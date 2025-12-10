@@ -9,8 +9,13 @@
         <div class="position-relative">
 
           <!-- КАРТИНКА -->
-          <img
-              :src="getImageSrc(recipe)"
+          <img v-if="recipe.imageData !== ''"
+              :src="recipe.imageData"
+              alt="Retsepti pilt"
+              style="width: 100%; height: 160px; object-fit: cover;"
+          >
+          <img v-else
+              src="../../assets/logo.png"
               alt="Retsepti pilt"
               style="width: 100%; height: 160px; object-fit: cover;"
           >

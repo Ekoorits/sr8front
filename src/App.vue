@@ -15,15 +15,17 @@
       </div>
       <div class="col-auto">
         <div class="row">
-          <div class="col-auto">
-            <SmallButton label="Lisa retsept"/>
+          <div v-if="!isHomeView" class="col-auto">
+            <SmallButton label="Kodu" @event-button-is-pressed="toHomeView"/>
           </div>
           <div class="col-auto">
-            <SmallButton v-if="!isMyRecipesView" label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
-            <SmallButton v-else label="Kodu" @event-button-is-pressed="toHomeView"/>
+            <SmallButton label="Lisa retsept" @event-button-is-pressed="toRecipeDetailsView"/>
           </div>
           <div class="col-auto">
-            <SmallButton label="Ostunimekirjad"/>
+            <SmallButton label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
+          </div>
+          <div class="col-auto">
+            <SmallButton label="Ostunimekirjad" @event-button-is-pressed="toShoppingLists"/>
           </div>
         </div>
       </div>
@@ -37,7 +39,7 @@
     </div>
   </nav>
 
-  <button v-if="!isLoggedIn" type="submit" class="btn btn-outline-success" @click="loginModalIsOpen=true">Logi sisse</button>
+  <button v-if="!isLoggedIn" type="submit" class="btn btn-outline-success mt-3" @click="loginModalIsOpen=true">Logi sisse</button>
 
   <router-view/>
 </template>
@@ -49,6 +51,7 @@ import NewUserModal from "@/components/modal/custom/NewUserModal.vue";
 import router from "@/router";
 import SmallButton from "@/components/buttons/SmallButton.vue";
 import navigationService from "@/services/NavigationService";
+import NavigationService from "@/services/NavigationService";
 
 export default {
   name: 'App',
@@ -64,6 +67,10 @@ export default {
   computed: {
     isMyRecipesView() {
       return this.$route.name === 'myRecipesRoute';
+    },
+
+    isHomeView() {
+      return this.$route.name === 'homeRoute'
     }
   },
   methods: {
@@ -84,8 +91,17 @@ export default {
       navigationService.navigateToMyRecipesView()
     },
     toHomeView() {
-      navigationService.navigateToHomeViewUserLoggedIn()
+      NavigationService.navigateToHomeView()
     },
+
+    toShoppingLists() {
+      NavigationService.navigateToShoppingListsView()
+    },
+
+    toRecipeDetailsView() {
+      NavigationService.navigateToRecipeDetailsView()
+    },
+
     handleUserLogout() {
       sessionStorage.clear();
       this.isLoggedIn = false;
@@ -98,6 +114,6 @@ export default {
     if (this.isLoggedIn) {
       this.username = sessionStorage.getItem('userName');
     }
-  }
+  },
 }
 </script>

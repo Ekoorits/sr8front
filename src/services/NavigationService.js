@@ -18,6 +18,10 @@ export default {
         router.push({name: 'notAuthorizedRoute'})
     },
 
+    navigateToRecipeDetailsView(){
+        router.push({name: 'recipeDetailsRoute'})
+    },
+
     navigateToAddIngredientView() {
         router.push({name: 'recipeIngredientRoute'})
     },
@@ -32,6 +36,18 @@ export default {
 
     navigateToRecipeView(recipeId) {
         router.push({name: 'recipeRoute', params: {recipeId: recipeId}})
+    },
+
+    navigateToShoppingListsView() {
+        router.push({name: 'shoppingListsRoute'})
+    },
+
+    navigateToShoppingListView() {
+        router.push({name: 'shoppingListRoute'})
+    },
+
+    navigateToShoppingRecipesView() {
+        router.push({name: 'shoppingRecipesRoute'})
     },
 
 }

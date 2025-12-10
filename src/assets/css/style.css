@@ -62,3 +62,6 @@ nav a.router-link-exact-active {
     height: 200px;
     font-size: xxx-large;
 }
+.recipe-page p {
+    text-align: left;
+}

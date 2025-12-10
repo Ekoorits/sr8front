@@ -6,7 +6,6 @@
         <h1>Tee süüa targalt ja keskkonda säästvalt</h1>
       </div>
     </div>
-
     <div class="row">
       <div class="position-relative">
         <RecipesSearch
@@ -17,18 +16,15 @@
         />
       </div>
     </div>
-
     <div class="row" style="padding:20px">
       <RecipeFilter @filters-changed="onFiltersChanged" />
     </div>
-
     <div class="row">
       <RecipeCards
           :recipes="recipes"
           @event-add-to-shopping-list="onAddToShoppingList"
       />
     </div>
-
   </div>
 </template>
 
@@ -49,7 +45,6 @@ export default {
       recipes: [],
 
       selectedRecipeId: 0,
-
       recipe: {
         recipeId: 0,
         recipeName: '',
@@ -61,20 +56,17 @@ export default {
         instructions: '',
         imageData: ''
       },
-
       category: {
         name: '',
         description: ''
       },
       searchText: '',
-
       filters: {
         cookingTimeId: null,
         difficultyId: null,
         mealTypeId: null,
         sort: 'NEWEST'
       },
-
       errorMessage: '',
       successMessage: '',
       errorResponse: {
@@ -83,7 +75,6 @@ export default {
       }
     }
   },
-
   methods: {
     loadRecipes () {
       RecipeService.sendGetRecipesRequest(
@@ -102,7 +93,6 @@ export default {
       this.filters = newFilters
       this.loadRecipes()
     },
-
     onRecipeSelected (recipeId) {
       this.selectedRecipeId = recipeId
       const found = this.recipes.find(r => r.recipeId === recipeId)
@@ -114,7 +104,6 @@ export default {
       this.searchText = searchText
       this.loadRecipes()
     },
-
     onAddToShoppingList (recipeId) {
       ShoppingListService.sendAddRecipeToShoppingListRequest(
           recipeId,

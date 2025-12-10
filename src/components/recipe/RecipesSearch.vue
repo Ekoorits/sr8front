@@ -5,7 +5,6 @@
       <span class="input-group-text bg-white border-end-0">
         <i class="bi bi-search"></i>
       </span>
-
       <input
           ref="searchField"
           type="text"
@@ -13,7 +12,6 @@
           placeholder="Otsi retsepti..."
           @keyup.enter="runSearch"
       >
-
       <button class="btn btn-primary" @click="runSearch">
         Otsi
       </button>

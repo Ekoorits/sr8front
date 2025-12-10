@@ -9,7 +9,6 @@
           @event-new-meal-type-selected="onMealTypeChange"
       />
     </div>
-
     <div class="filter-dropdown">
       <DifficultiesDropdown
           :difficulties="difficulties"
@@ -17,7 +16,6 @@
           @event-new-difficulty-selected="onDifficultyChange"
       />
     </div>
-
     <div class="filter-dropdown">
       <CookingTimeDropdown
           :cooking-times="cookingTimes"
@@ -25,9 +23,7 @@
           @event-new-cooking-time-selected="onCookingTimeChange"
       />
     </div>
-
     <span class="mx-2 text-muted">|</span>
-
     <div class="dropdown">
       <a
           class="dropdown-toggle text-decoration-none"
@@ -49,18 +45,15 @@
         </li>
       </ul>
     </div>
-
     <button class="btn btn-link p-0" @click="clearFilters">
       Kõik filtrid
     </button>
   </div>
 </template>
-
 <script>
 import CookingTimeDropdown from '@/components/dropdowns/CookingTimeDropdown.vue'
 import DifficultiesDropdown from '@/components/dropdowns/DifficultiesDropdown.vue'
 import MealTypeDropdown from '@/components/dropdowns/MealTypeDropdown.vue'
-
 import MealTypeService from '@/services/MealTypeService'
 import DifficultyService from '@/services/DifficultyService'
 import CookingTimeService from '@/services/CookingTimeService'
@@ -81,16 +74,10 @@ export default {
         mealTypeId: null,
       },
       sort: 'NEWEST',
-
-      // для MealTypeDropdown
       mealTypes: [],
       selectedMealType: '',
-
-      // для DifficultiesDropdown
       difficulties: [],
       selectedDifficulty: '',
-
-      // для CookingTimeDropdown
       cookingTimes: [],
       selectedCookingTime: ''
     }
@@ -101,21 +88,16 @@ export default {
     },
   },
   mounted() {
-    // Toidukord
     MealTypeService.sendGetMealTypesRequest()
         .then(response => {
           this.mealTypes = response.data
         })
         .catch(() => {})
-
-    // Raskusaste
     DifficultyService.sendGetDifficultiesRequest()
         .then(response => {
           this.difficulties = response.data
         })
         .catch(() => {})
-
-    // Valmistusaeg
     CookingTimeService.sendGetCookingTimeRequest()
         .then(response => {
           this.cookingTimes = response.data
@@ -129,30 +111,25 @@ export default {
         sort: this.sort,
       })
     },
-
     onMealTypeChange(value) {
       this.selectedMealType = value
       this.filters.mealTypeId = value   // если бэк фильтрует по названию
       this.emitChange()
     },
-
     onDifficultyChange(value) {
       this.selectedDifficulty = value
       this.filters.difficultyId = value
       this.emitChange()
     },
-
     onCookingTimeChange(value) {
       this.selectedCookingTime = value
       this.filters.cookingTimeId = value
       this.emitChange()
     },
-
     onSortChange(value) {
       this.sort = value
       this.emitChange()
     },
-
     clearFilters() {
       this.filters = {
         cookingTimeId: null,

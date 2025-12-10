@@ -7,8 +7,6 @@
     >
       <div class="recipe-card shadow-sm rounded-4 overflow-hidden bg-white" style="width: 260px; margin: auto;">
         <div class="position-relative">
-
-          <!-- 🔗 КАРТИНКА КЛИКАБЕЛЬНАЯ -->
           <router-link
               :to="{
               name: 'recipeRoute',
@@ -33,7 +31,6 @@
             🛒
           </div>
         </div>
-
         <div class="p-3">
           <router-link
               :to="{
@@ -48,7 +45,6 @@
             </h5>
           </router-link>
         </div>
-
       </div>
     </div>
   </div>

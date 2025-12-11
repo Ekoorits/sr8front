@@ -34,4 +34,12 @@ export default {
             }
         })
     },
+
+    getRecipeIngredients(recipeId) {
+        return axios.get('/recipe/ingredients', {
+            params: {
+                recipeId: recipeId
+            }
+        })
+    }
 }

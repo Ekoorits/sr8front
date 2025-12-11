@@ -4,32 +4,40 @@
     <!-- Pealkiri -->
     <section class="text-center mb-4">
       <div class="container text-center">
-        <h1 class="mb-2">{{ recipe.recipeName }}</h1>
+        <h1 class="mb-2">{{ recipe.name }}</h1>
         <h3 class="mb-4">Inimeste arv: {{ recipe.pax }}</h3>
       </div>
     </section>
 
     <!-- Pilt -->
-    <section class="text-center mb-5" v-if="recipe.imageUrl">
+    <section class="text-center mb-5">
       <div class="container">
-        <img
-            :src="recipe.imageUrl"
-            :alt="recipe.recipeName"
-            class="img-fluid rounded shadow mb-4"
-        />
+        <img :src="recipe.imageUrl" :alt="recipe.name" class="img-fluid rounded shadow mb-4"/>
       </div>
     </section>
 
-    <section class="text-center mb-5" v-else>
-      <p class="text-muted">Pilt puudub</p>
-    </section>
-
-    <!-- Koostisosad -->
+    <!-- Koostisosade tabel -->
     <section class="mb-5">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-8">
-            <RecipeIngredients :ingredients="recipe.ingredients" />
+            <h4 class="mb-3 text-start">Koostisosad:</h4>
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th scope="col">koostisosa</th>
+                <th scope="col">kogus</th>
+                <th scope="col">ühik</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="ingredient in recipe.ingredients" :key="ingredient.name">
+                <td>{{ ingredient.name }}</td>
+                <td>{{ ingredient.amount }}</td>
+                <td>{{ ingredient.measureUnit }}</td>
+              </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -47,82 +55,69 @@
       </div>
     </section>
 
-    <!-- Laadimine / viga -->
-    <section class="mb-5" v-if="isLoading || loadError">
-      <div class="container text-center">
-        <p v-if="isLoading">Laen retsepti...</p>
-        <p v-if="loadError" class="text-danger">{{ loadError }}</p>
-      </div>
-    </section>
-
   </div>
 </template>
 
 <script>
-import RecipeService from "@/services/RecipeService"
-import RecipeIngredients from "@/components/recipe/RecipeIngredients.vue"
+import RecipeService from "@/services/RecipeService";
 
 export default {
   name: "RecipeView",
 
-  components: {
-    RecipeIngredients
-  },
-
-  data () {
+  data() {
     return {
       recipe: {
-        recipeId: 0,
-        recipeName: "",
-        authorName: "",
-        mealType: "",
-        difficultyLevelNumber: 0,
-        cookingTimeMinutesMax: 0,
+        id: 0,
+        userId: 0,
+        mealTypeId: 0,
+        cookingTimeId: 0,
+        difficultyId: 0,
+        name: "",
+        author: "",
         pax: 0,
         instructions: "",
-        imageData: "",
-        imageUrl: "",
-        ingredients: []
+        imageUrl: "",       // pildi jaoks
+        ingredients: [],    // koostisosad (tabeli v-for)
       },
-      isLoading: false,
-      loadError: null
-    }
+    };
   },
 
-  mounted () {
-    let recipeId = this.$route.query.recipeId
-
-    if (!recipeId) {
-      this.loadError = "Retsepti ID puudub"
-      return
-    }
-
-    this.loadRecipe(recipeId)
+  mounted() {
+    this.loadRecipe();
   },
 
   methods: {
-    loadRecipe (id) {
-      this.isLoading = true
-      this.loadError = null
+    loadRecipe() {
+      const recipeId = Number(this.$route.params.id);
+      if (!recipeId) {
+        console.error("Route param 'id' puudub");
+        return;
+      }
 
-      RecipeService.getRecipe(id)
-          .then(response => {
-            let data = response.data
-            this.recipe = Object.assign({}, this.recipe, data)
-            if (data.imageData) {
-              this.recipe.imageUrl = "data:image/jpeg;base64," + data.imageData
-            }
-            if (data.ingredients) {
-              this.recipe.ingredients = data.ingredients
-            }
+      RecipeService.getRecipe(recipeId)
+          .then((response) => {
+            const r = response.data;
+
+            // kaardistame backendi väljad fronti jaoks
+            this.recipe = {
+              ...this.recipe,
+              id: r.recipeId,
+              name: r.name,
+              pax: r.pax,
+              author: r.author,
+              // kui imageData on puhas Base64:
+              imageUrl: r.imageData
+                  ? "data:image/jpeg;base64," + r.imageData
+                  : "",
+              // kui /recipe tagastab ka koostisosad & juhendi, lisa need siia
+              instructions: r.instructions || "",
+              ingredients: r.ingredients || [],
+            };
           })
-          .catch(() => {
-            this.loadError = "Retsepti ei saanud laadida"
-          })
-          .finally(() => {
-            this.isLoading = false
-          })
-    }
-  }
-}
+          .catch((error) => {
+            console.error("Retsepti laadimisel tekkis viga:", error);
+          });
+    },
+  },
+};
 </script>

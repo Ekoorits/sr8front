@@ -62,7 +62,7 @@ const routes = [
         component: ShoppingRecipesView
     },
     {
-        path: '/recipes/id',
+        path: '/recipe/:recipeId',
         name: 'recipeView',
         component: RecipeView
     }

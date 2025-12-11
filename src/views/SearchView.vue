@@ -93,16 +93,20 @@ export default {
       this.filters = newFilters
       this.loadRecipes()
     },
-    onRecipeSelected (recipeId) {
+    onRecipeSelected(recipeId) {
       this.selectedRecipeId = recipeId
-      const found = this.recipes.find(r => r.recipeId === recipeId)
-      if (found) {
-        this.recipe = found
+
+      let selectedRecipe = this.recipes.find(function (recipe) {
+        return recipe.recipeId === recipeId
+      })
+
+      if (selectedRecipe) {
+        this.recipe = selectedRecipe
       }
 
-      // ➜ добавляем переход на страницу рецепта
       NavigationService.navigateToRecipeView(recipeId)
     },
+
     onSearchTextChanged (searchText) {
       this.searchText = searchText
       this.loadRecipes()

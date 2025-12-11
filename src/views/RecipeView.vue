@@ -81,53 +81,47 @@ export default {
         pax: 0,
         instructions: "",
         imageData: "",
-        imageUrl: "",      // сюда сами склеим data:image/jpeg;base64,...
-        ingredients: []    // список ингредиентов для таблицы
+        imageUrl: "",
+        ingredients: []
       },
       isLoading: false,
       loadError: null
     }
   },
 
-  created () {
-    // backend: GET /recipe?recipeId=...
-    const id = this.$route.query.recipeId
+  mounted () {
+    let recipeId = this.$route.query.recipeId
 
-    if (!id) {
+    if (!recipeId) {
       this.loadError = "Retsepti ID puudub"
       return
     }
 
-    this.loadRecipe(id)
+    this.loadRecipe(recipeId)
   },
 
   methods: {
-    async loadRecipe (id) {
+    loadRecipe (id) {
       this.isLoading = true
       this.loadError = null
 
-      try {
-        const response = await RecipeService.getRecipe(id)
-        const data = response.data
-
-        // подмешиваем все поля из backend-ответа
-        this.recipe = Object.assign({}, this.recipe, data)
-
-        // картинка: backend даёт imageData (base64) → делаем imageUrl
-        if (data.imageData) {
-          this.recipe.imageUrl = "data:image/jpeg;base64," + data.imageData
-        }
-
-        // ингредиенты: если backend вернёт массив ingredients
-        if (data.ingredients) {
-          this.recipe.ingredients = data.ingredients
-        }
-      } catch (e) {
-        console.error(e)
-        this.loadError = "Retsepti ei saanud laadida"
-      } finally {
-        this.isLoading = false
-      }
+      RecipeService.getRecipe(id)
+          .then(response => {
+            let data = response.data
+            this.recipe = Object.assign({}, this.recipe, data)
+            if (data.imageData) {
+              this.recipe.imageUrl = "data:image/jpeg;base64," + data.imageData
+            }
+            if (data.ingredients) {
+              this.recipe.ingredients = data.ingredients
+            }
+          })
+          .catch(() => {
+            this.loadError = "Retsepti ei saanud laadida"
+          })
+          .finally(() => {
+            this.isLoading = false
+          })
     }
   }
 }

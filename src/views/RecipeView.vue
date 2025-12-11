@@ -60,12 +60,14 @@
 
 <script>
 import RecipeService from "@/services/RecipeService";
+import {useRoute} from "vue-router";
 
 export default {
   name: "RecipeView",
 
   data() {
     return {
+      
       recipe: {
         id: 0,
         userId: 0,
@@ -88,7 +90,7 @@ export default {
 
   methods: {
     loadRecipe() {
-      const recipeId = Number(this.$route.params.id);
+      const recipeId = Number(useRoute().query.recipeId);
       if (!recipeId) {
         console.error("Route param 'id' puudub");
         return;

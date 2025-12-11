@@ -40,9 +40,13 @@ export default {
     },
 
     navigateToRecipeView(recipeId) {
-        router.push({name: 'recipeRoute', params: {recipeId: recipeId}})
+        router.push({
+            name: 'recipeRoute',
+            params: {
+                recipeId: recipeId
+            }
+        })
     },
-
     navigateToShoppingListsView() {
         router.push({name: 'shoppingListsRoute'})
     },

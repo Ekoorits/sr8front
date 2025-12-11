@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default {
-    sendGetRecipeIngredientRequest() {
-        return axios.get('/ingredients');
+    sendGetIngredientRequest() {
+        return axios.get('/ingredients/all');
     },
 }

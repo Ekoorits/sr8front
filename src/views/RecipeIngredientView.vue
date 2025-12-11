@@ -15,11 +15,9 @@
 
     <div class="row">
       <div class="col-4">
-        <div class="form-floating mb-3">
-          <input v-model="searchParam" type="text" class="form-control" placeholder="Koostisosa">
-          <label>Koostisosa (vahet Hristina SEARCH componendi vastu)</label>
-        </div>
+        <IngredientSearch @event-item-selected="setSelectedIngredient"/>
       </div>
+      
       <div class="col-2">
         <div class="form-floating mb-3 ">
           <input v-model="ingredientAmount" type="number" min="1" class="form-control" placeholder="Kogus">
@@ -31,15 +29,13 @@
           <SmallButton label="Sisesta" @event-button-is-pressed="executeAddRecipeIngredient()"/>
         </div>
       </div>
-
-
       <div class="row mb-3">
         <div class="col">
-          <RecipeIngredientTable :recipeIngredients="recipeIngredients" :recipeId="recipeId"/>
+          <RecipeIngredientTable :recipeIngredients="recipeIngredients" :recipeId="recipeId"
+                                  @event-recipe-ingredient-deleted="getRecipeIngredients"
+          />
         </div>
       </div>
-
-
       <div class="row mb-3">
         <div class="col">
           <SmallButton label="Valmis" @event-button-is-pressed="navigateToRecipeView(recipeId)"/>
@@ -59,10 +55,11 @@ import NavigationService from "@/services/NavigationService";
 import RecipeIngredientService from "@/services/RecipeIngredientService";
 import {useRoute} from "vue-router";
 import RecipeIngredientTable from "@/components/tables/RecipeIngredientTable.vue";
+import IngredientSearch from "@/components/search/IngredientSearch.vue";
 
 export default {
   name: 'recipeIngredientView',
-  components: {RecipeIngredientTable, AlertDanger, AlertSuccess, SmallButton},
+  components: {IngredientSearch, RecipeIngredientTable, AlertDanger, AlertSuccess, SmallButton},
   data() {
     return {
 
@@ -73,7 +70,6 @@ export default {
       errorMessage: '',
       successMessage: '',
 
-      searchParam: '',
       measureUnitName: '',
 
       recipeIngredients: [
@@ -110,6 +106,7 @@ export default {
     handleAddRecipeIngredientResponse() {
       this.successMessage = "Koostisosa lisatud!";
       setTimeout(this.resetMessages, 4000);
+      this.getRecipeIngredients();
     },
 
     handleAddRecipeIngredientResponseError() {
@@ -117,12 +114,8 @@ export default {
       setTimeout(this.resetMessages, 4000);
     },
 
-    searchIngredients() {
-      if (this.searchParam.length >= 3) {
-        SearchService.sendGetRecipeIngredientRequest(this.searchParam)
-            .then(response => {
-            })
-      }
+    setSelectedIngredient(ingredient) {
+      this.ingredientId = ingredient.id;
     },
 
     navigateToRecipeView(recipeId) {

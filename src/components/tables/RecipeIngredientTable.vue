@@ -5,6 +5,7 @@
       <th scope="col">Koostisosa</th>
       <th scope="col">Kogus</th>
       <th scope="col">Ühik</th>
+      <th scope="col">Kirjeldus</th>
       <th scope="col" v-if="isLoggedIn"></th>
     </tr>
     </thead>
@@ -16,7 +17,6 @@
       <td>{{recipeIngredient.recipeIngredientDescription}}</td>
       <td v-if="isLoggedIn">
         <DeleteButtonIcon @event-button-is-pressed="handleDeleteRecipeIngredient(recipeIngredient.recipeIngredientId)"
-                          kuidagi peab emittimia.
         />
       </td>
     </tr>
@@ -54,6 +54,8 @@ export default {
 
     handleDeleteRecipeIngredient(recipeIngredientId) {
       RecipeIngredientService.sendDeleteRecipeIngredientRequest(recipeIngredientId)
+        .then(() => {this.$emit('event-recipe-ingredient-deleted')})
+        .catch(error => NavigationService.navigateToErrorView())
     },
   },
 

@@ -99,6 +99,9 @@ export default {
       if (found) {
         this.recipe = found
       }
+
+      // ➜ добавляем переход на страницу рецепта
+      NavigationService.navigateToRecipeView(recipeId)
     },
     onSearchTextChanged (searchText) {
       this.searchText = searchText

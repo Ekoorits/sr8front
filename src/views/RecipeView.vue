@@ -4,40 +4,32 @@
     <!-- Pealkiri -->
     <section class="text-center mb-4">
       <div class="container text-center">
-        <h1 class="mb-2">{{ recipe.name }}</h1>
+        <h1 class="mb-2">{{ recipe.recipeName }}</h1>
         <h3 class="mb-4">Inimeste arv: {{ recipe.pax }}</h3>
       </div>
     </section>
 
     <!-- Pilt -->
-    <section class="text-center mb-5">
+    <section class="text-center mb-5" v-if="recipe.imageUrl">
       <div class="container">
-        <img :src="recipe.imageUrl" :alt="recipe.name" class="img-fluid rounded shadow mb-4"/>
+        <img
+            :src="recipe.imageUrl"
+            :alt="recipe.recipeName"
+            class="img-fluid rounded shadow mb-4"
+        />
       </div>
     </section>
 
-    <!-- Koostisosade tabel -->
+    <section class="text-center mb-5" v-else>
+      <p class="text-muted">Pilt puudub</p>
+    </section>
+
+    <!-- Koostisosad -->
     <section class="mb-5">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-8">
-            <h4 class="mb-3 text-start">Koostisosad:</h4>
-            <table class="table table-bordered">
-              <thead>
-              <tr>
-                <th scope="col">koostisosa</th>
-                <th scope="col">kogus</th>
-                <th scope="col">ühik</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="ingredient in recipe.ingredients" :key="ingredient.name">
-                <td>{{ ingredient.name }}</td>
-                <td>{{ ingredient.amount }}</td>
-                <td>{{ ingredient.measureUnit }}</td>
-              </tr>
-              </tbody>
-            </table>
+            <RecipeIngredients :ingredients="recipe.ingredients" />
           </div>
         </div>
       </div>
@@ -55,37 +47,88 @@
       </div>
     </section>
 
+    <!-- Laadimine / viga -->
+    <section class="mb-5" v-if="isLoading || loadError">
+      <div class="container text-center">
+        <p v-if="isLoading">Laen retsepti...</p>
+        <p v-if="loadError" class="text-danger">{{ loadError }}</p>
+      </div>
+    </section>
+
   </div>
 </template>
 
 <script>
-import RecipeService from "@/services/RecipeService";
+import RecipeService from "@/services/RecipeService"
+import RecipeIngredients from "@/components/recipe/RecipeIngredients.vue"
 
 export default {
-  name: 'RecipeView',
-  data() {
+  name: "RecipeView",
+
+  components: {
+    RecipeIngredients
+  },
+
+  data () {
     return {
       recipe: {
-          userId: 0,
-          mealTypeId: 0,
-          cookingTimeId: 0,
-          difficultyId: 0,
-          name: '',
-          author: '',
-          pax: 0,
-          instructions: '',
+        recipeId: 0,
+        recipeName: "",
+        authorName: "",
+        mealType: "",
+        difficultyLevelNumber: 0,
+        cookingTimeMinutesMax: 0,
+        pax: 0,
+        instructions: "",
+        imageData: "",
+        imageUrl: "",      // сюда сами склеим data:image/jpeg;base64,...
+        ingredients: []    // список ингредиентов для таблицы
       },
-      recipeImage: {
-        imageData: '',
-      },
-      ingredients: []
+      isLoading: false,
+      loadError: null
+    }
+  },
+
+  created () {
+    // backend: GET /recipe?recipeId=...
+    const id = this.$route.query.recipeId
+
+    if (!id) {
+      this.loadError = "Retsepti ID puudub"
+      return
     }
 
+    this.loadRecipe(id)
   },
-  methods() {
 
+  methods: {
+    async loadRecipe (id) {
+      this.isLoading = true
+      this.loadError = null
 
+      try {
+        const response = await RecipeService.getRecipe(id)
+        const data = response.data
+
+        // подмешиваем все поля из backend-ответа
+        this.recipe = Object.assign({}, this.recipe, data)
+
+        // картинка: backend даёт imageData (base64) → делаем imageUrl
+        if (data.imageData) {
+          this.recipe.imageUrl = "data:image/jpeg;base64," + data.imageData
+        }
+
+        // ингредиенты: если backend вернёт массив ingredients
+        if (data.ingredients) {
+          this.recipe.ingredients = data.ingredients
+        }
+      } catch (e) {
+        console.error(e)
+        this.loadError = "Retsepti ei saanud laadida"
+      } finally {
+        this.isLoading = false
+      }
+    }
   }
-  }
+}
 </script>
-

@@ -1,9 +1,7 @@
 import axios from "axios";
 
 export default {
-    sendGetRecipeRequest(recipeId) {
-        return axios.get('/recipe', recipeId);
-    },
+
 
     sendPostRecipeDetailRequest(newRecipe) {
         return axios.post('/recipe/detail', newRecipe)
@@ -29,7 +27,7 @@ export default {
         })
     },
 
-    sendGetRecipe(recipeId) {
+    getRecipe(recipeId) {
         return axios.get('/recipe', {
             params: {
                 recipeId: recipeId

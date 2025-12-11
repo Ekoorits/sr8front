@@ -9,6 +9,7 @@
           @event-new-meal-type-selected="onMealTypeChange"
       />
     </div>
+
     <div class="filter-dropdown">
       <DifficultiesDropdown
           :difficulties="difficulties"
@@ -16,6 +17,7 @@
           @event-new-difficulty-selected="onDifficultyChange"
       />
     </div>
+
     <div class="filter-dropdown">
       <CookingTimeDropdown
           :cooking-times="cookingTimes"
@@ -23,7 +25,9 @@
           @event-new-cooking-time-selected="onCookingTimeChange"
       />
     </div>
+
     <span class="mx-2 text-muted">|</span>
+
     <div class="dropdown">
       <a
           class="dropdown-toggle text-decoration-none"
@@ -45,11 +49,13 @@
         </li>
       </ul>
     </div>
+
     <button class="btn btn-link p-0" @click="clearFilters">
       Kõik filtrid
     </button>
   </div>
 </template>
+
 <script>
 import CookingTimeDropdown from '@/components/dropdowns/CookingTimeDropdown.vue'
 import DifficultiesDropdown from '@/components/dropdowns/DifficultiesDropdown.vue'
@@ -60,18 +66,21 @@ import CookingTimeService from '@/services/CookingTimeService'
 
 export default {
   name: 'RecipeFilter',
+
   components: {
     CookingTimeDropdown,
     DifficultiesDropdown,
-    MealTypeDropdown,
+    MealTypeDropdown
   },
+
   emits: ['filters-changed'],
-  data() {
+
+  data () {
     return {
       filters: {
         cookingTimeId: null,
         difficultyId: null,
-        mealTypeId: null,
+        mealTypeId: null
       },
       sort: 'NEWEST',
       mealTypes: [],
@@ -82,66 +91,76 @@ export default {
       selectedCookingTime: ''
     }
   },
+
   computed: {
-    sortLabel() {
+    sortLabel () {
       return this.sort === 'NEWEST' ? 'Uuemad' : 'Vanaimad'
-    },
+    }
   },
-  mounted() {
+
+  mounted () {
     MealTypeService.sendGetMealTypesRequest()
-        .then(response => {
+        .then((response) => {
           this.mealTypes = response.data
         })
         .catch(() => {})
+
     DifficultyService.sendGetDifficultiesRequest()
-        .then(response => {
+        .then((response) => {
           this.difficulties = response.data
         })
         .catch(() => {})
+
     CookingTimeService.sendGetCookingTimeRequest()
-        .then(response => {
+        .then((response) => {
           this.cookingTimes = response.data
         })
         .catch(() => {})
   },
+
   methods: {
-    emitChange() {
+    emitChange () {
       this.$emit('filters-changed', {
         ...this.filters,
-        sort: this.sort,
+        sort: this.sort
       })
     },
-    onMealTypeChange(value) {
+
+    onMealTypeChange (value) {
       this.selectedMealType = value
-      this.filters.mealTypeId = value   // если бэк фильтрует по названию
+      this.filters.mealTypeId = value
       this.emitChange()
     },
-    onDifficultyChange(value) {
+
+    onDifficultyChange (value) {
       this.selectedDifficulty = value
       this.filters.difficultyId = value
       this.emitChange()
     },
-    onCookingTimeChange(value) {
+
+    onCookingTimeChange (value) {
       this.selectedCookingTime = value
       this.filters.cookingTimeId = value
       this.emitChange()
     },
-    onSortChange(value) {
+
+    onSortChange (value) {
       this.sort = value
       this.emitChange()
     },
-    clearFilters() {
+
+    clearFilters () {
       this.filters = {
         cookingTimeId: null,
         difficultyId: null,
-        mealTypeId: null,
+        mealTypeId: null
       }
       this.sort = 'NEWEST'
       this.selectedMealType = ''
       this.selectedDifficulty = ''
       this.selectedCookingTime = ''
       this.emitChange()
-    },
-  },
+    }
+  }
 }
 </script>

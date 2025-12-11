@@ -6,6 +6,7 @@
         <h1>Tee süüa targalt ja keskkonda säästvalt</h1>
       </div>
     </div>
+
     <div class="row">
       <div class="position-relative">
         <RecipesSearch
@@ -16,9 +17,11 @@
         />
       </div>
     </div>
+
     <div class="row" style="padding:20px">
       <RecipeFilter @filters-changed="onFiltersChanged" />
     </div>
+
     <div class="row">
       <RecipeCards
           :recipes="recipes"
@@ -34,7 +37,7 @@ import RecipeCards from '@/components/recipe/RecipeCards.vue'
 import ShoppingListService from '@/services/ShoppingListService'
 import NavigationService from '@/services/NavigationService'
 import RecipeFilter from '@/components/recipe/RecipeFilter.vue'
-import RecipeService from '@/services/RecipeService'   // используем сервис из курса
+import RecipeService from '@/services/RecipeService'
 
 export default {
   name: 'SearchView',
@@ -75,29 +78,78 @@ export default {
       }
     }
   },
+
   methods: {
-    loadRecipes () {
-      RecipeService.sendGetRecipesRequest(
-          this.searchText,
-          this.filters.cookingTimeId,
-          this.filters.difficultyId,
-          this.filters.mealTypeId,
-          this.filters.sort
-      )
-          .then(response => {
-            this.recipes = response.data
-          })
-          .catch(() => {})
+    getRecipeId (recipe) {
+      if (recipe.recipeId != null) {
+        return recipe.recipeId
+      }
+      if (recipe.id != null) {
+        return recipe.id
+      }
+      return 0
     },
-    onFiltersChanged(newFilters) {
+
+    loadRecipes () {
+      console.log('loadRecipes filters:', this.filters)
+      let hasFilters =
+          this.filters.mealTypeId != null ||
+          this.filters.difficultyId != null ||
+          this.filters.cookingTimeId != null
+
+      if (hasFilters) {
+        RecipeService.sendGetFilteredRecipesRequest(
+            this.filters.mealTypeId,
+            this.filters.difficultyId,
+            this.filters.cookingTimeId
+        )
+            .then((response) => {
+              this.recipes = response.data
+              this.applySort()
+            })
+            .catch(() => {})
+      } else {
+        RecipeService.sendGetRecipesRequest(this.searchText)
+            .then((response) => {
+              this.recipes = response.data
+              this.applySort()
+            })
+            .catch(() => {})
+      }
+    },
+
+    // сортировка по id на фронте
+    applySort () {
+      if (!this.recipes || this.recipes.length === 0) {
+        return
+      }
+
+      let sortValue = this.filters.sort || 'NEWEST'
+
+      this.recipes.sort((a, b) => {
+        let idA = this.getRecipeId(a)
+        let idB = this.getRecipeId(b)
+
+        if (sortValue === 'NEWEST') {
+          return idB - idA
+        } else {
+          return idA - idB
+        }
+      })
+
+      console.log('sorted', sortValue, this.recipes.map(r => this.getRecipeId(r)))
+    },
+
+    onFiltersChanged (newFilters) {
       this.filters = newFilters
       this.loadRecipes()
     },
-    onRecipeSelected(recipeId) {
+
+    onRecipeSelected (recipeId) {
       this.selectedRecipeId = recipeId
 
       let selectedRecipe = this.recipes.find(function (recipe) {
-        return recipe.recipeId === recipeId
+        return recipe.recipeId === recipeId || recipe.id === recipeId
       })
 
       if (selectedRecipe) {
@@ -111,6 +163,7 @@ export default {
       this.searchText = searchText
       this.loadRecipes()
     },
+
     onAddToShoppingList (recipeId) {
       ShoppingListService.sendAddRecipeToShoppingListRequest(
           recipeId,
@@ -126,3 +179,4 @@ export default {
   }
 }
 </script>
+

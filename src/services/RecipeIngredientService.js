@@ -11,4 +11,20 @@ export default {
             }
         })
     },
+
+    sendGetRecipeIngredientsRequest(recipeId) {
+        return axios.get('/recipe/ingredients',{
+            params: {
+                recipeId: recipeId
+            }
+        })
+    },
+
+    sendDeleteRecipeIngredientRequest(recipeIngredientId) {
+        return axios.delete('/recipe/ingredient', {
+            params: {
+                recipeIngredientId: recipeIngredientId
+            }
+        })
+    },
 }

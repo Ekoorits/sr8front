@@ -31,34 +31,18 @@
           <SmallButton label="Sisesta" @event-button-is-pressed="executeAddRecipeIngredient()"/>
         </div>
       </div>
+
+
       <div class="row mb-3">
         <div class="col">
-          <table class="table">
-            <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Koostisosa</th>
-              <th scope="col">Kogus</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Piim</td>
-              <td>300 ml</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Muna</td>
-              <td>5000 g</td>
-            </tr>
-            </tbody>
-          </table>
+          <RecipeIngredientTable :recipeIngredients="recipeIngredients" :recipeId="recipeId"/>
         </div>
       </div>
+
+
       <div class="row mb-3">
         <div class="col">
-          <SmallButton label="Valmis" @event-button-is-pressed="navigateToRecipeView"/>
+          <SmallButton label="Valmis" @event-button-is-pressed="navigateToRecipeView(recipeId)"/>
         </div>
       </div>
 
@@ -74,10 +58,11 @@ import AlertDanger from "@/components/modal/alerts/AlertDanger.vue";
 import NavigationService from "@/services/NavigationService";
 import RecipeIngredientService from "@/services/RecipeIngredientService";
 import {useRoute} from "vue-router";
+import RecipeIngredientTable from "@/components/tables/RecipeIngredientTable.vue";
 
 export default {
   name: 'recipeIngredientView',
-  components: {AlertDanger, AlertSuccess, SmallButton},
+  components: {RecipeIngredientTable, AlertDanger, AlertSuccess, SmallButton},
   data() {
     return {
 
@@ -85,18 +70,22 @@ export default {
       ingredientId: 0,
       ingredientAmount: 0,
 
-
       errorMessage: '',
       successMessage: '',
 
       searchParam: '',
       measureUnitName: '',
 
-      newRecipeIngredient: {
-        name: '',
-        amount: 0,
-        measureUnit: ''
-      },
+      recipeIngredients: [
+        {
+          recipeIngredientId: 0,
+          recipeIngredientName: '',
+          recipeIngredientAmount: 0,
+          recipeIngredientMeasureUnit: '',
+          recipeIngredientDescription: ''
+        }
+      ]
+
     }
   },
   methods: {
@@ -110,6 +99,12 @@ export default {
       RecipeIngredientService.sendPostAddRecipeIngredientRequest(this.recipeId, this.ingredientId, this.ingredientAmount)
           .then(() => this.handleAddRecipeIngredientResponse())
           .catch(() => this.handleAddRecipeIngredientResponseError())
+    },
+
+    getRecipeIngredients() {
+      RecipeIngredientService.sendGetRecipeIngredientsRequest(this.recipeId)
+          .then(response => this.recipeIngredients = response.data)
+          .catch(() => NavigationService.navigateToErrorView());
     },
 
     handleAddRecipeIngredientResponse() {
@@ -130,23 +125,14 @@ export default {
       }
     },
 
-    convertMeasureUnitToName(measureUnit) {
-      if (measureUnit === 'g') {
-        return this.measureUnitName = 'grammides'
-      } else if (measureUnit === 'ml') {
-        return this.measureUnitName = 'milliliitrites'
-      } else {
-        return this.measureUnitName = ''
-      }
-    },
-
     navigateToRecipeView(recipeId) {
       NavigationService.navigateToRecipeView(recipeId)
     },
 
 
   },
-  mounted() {
+  beforeMount() {
+    this.getRecipeIngredients()
   }
 }
 </script>

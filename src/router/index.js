@@ -60,11 +60,6 @@ const routes = [
         path: '/shopping-recipes',
         name: 'shoppingRecipesRoute',
         component: ShoppingRecipesView
-    },
-    {
-        path: '/recipes/:id',
-        name: 'recipeView',
-        component: RecipeView
     }
 ]
 

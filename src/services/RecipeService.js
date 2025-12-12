@@ -19,19 +19,15 @@ export default {
         })
     },
     sendGetFilteredRecipesRequest (mealTypeId, difficultyId, cookingTimeId) {
-        const params = {}
 
-        if (mealTypeId != null) {
-            params.mealTypeId = mealTypeId
-        }
-        if (difficultyId != null) {
-            params.difficultyId = difficultyId
-        }
-        if (cookingTimeId != null) {
-            params.cookingTimeId = cookingTimeId
-        }
+        return axios.get('/recipes/filter', {
+            params: {
+                mealTypeId: mealTypeId,
+                difficultyId: difficultyId,
+                cookingTimeId: cookingTimeId,
+            }
 
-        return axios.get('/recipes/filter', { params })
+        })
     }
 
 ,

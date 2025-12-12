@@ -19,15 +19,21 @@
               <div class="row">
                 <div class="col">
                   <h2>Juubelisünnipäeva nimekiri 2025</h2>
-                  <p>Juubel 100 inimesega</p>
+                  <p>Juubel 100 inimesega <EditButtonIcon/> <DeleteButtonIcon/></p>
                 </div>
                 <div class="col">
-                  <EditButtonIcon/>
-                  <DeleteButtonIcon/>
-                  <button>Valitud retseptid</button>
-                  <button>Vaata ostunimekirja</button>
-                  <button>Koosta ostunimekiri</button>
-                  <button>Koosta ostunimekiri uuest</button>
+                </div>
+                <div class="mb-3">
+                  <SmallButton label="Valitud retseptid"/>
+                </div>
+                <div class="mb-3">
+                  <SmallButton label="Vaata ostunimekirja"/>
+                </div>
+                <div class="mb-3">
+                  <SmallButton label="Koosta ostunimekiri"/>
+                </div>
+                <div class="mb-3">
+                  <SmallButton label="Koosta ostunimekiri uuesti"/>
                 </div>
               </div>
             </div>

@@ -143,8 +143,8 @@ export default {
       NavigationService.navigateToHomeView()
     },
 
-    handleNewMealTypeSelected(selectedMealTypeName) {
-      this.newRecipe.mealType = selectedMealTypeName
+    handleNewMealTypeSelected(selectedMealType) {
+      this.newRecipe.mealType = selectedMealType.mealTypeName
     },
 
     handleNewDifficultySelected(selectedDifficultyLevelNumber) {

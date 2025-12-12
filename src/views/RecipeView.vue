@@ -1,7 +1,6 @@
 <template>
   <div class="recipe-page">
 
-    <!-- Pealkiri -->
     <section class="text-center mb-4">
       <div class="container text-center">
         <h1 class="mb-2">{{ recipe.name }}</h1>
@@ -9,14 +8,12 @@
       </div>
     </section>
 
-    <!-- Pilt -->
     <section class="text-center mb-5">
       <div class="container">
         <img :src="recipe.imageUrl" :alt="recipe.name" class="img-fluid rounded shadow mb-4"/>
       </div>
     </section>
 
-    <!-- Koostisosade tabel -->
     <section class="mb-5">
       <div class="container">
         <div class="row justify-content-center">
@@ -32,9 +29,9 @@
               </thead>
               <tbody>
               <tr v-for="ingredient in recipe.ingredients" :key="ingredient.name">
-                <td>{{ ingredient.name }}</td>
-                <td>{{ ingredient.amount }}</td>
-                <td>{{ ingredient.measureUnit }}</td>
+                <td>{{ ingredient.recipeIngredientName }}</td>
+                <td>{{ ingredient.recipeIngredientAmount }}</td>
+                <td>{{ ingredient.recipeIngredientMeasureUnit }}</td>
               </tr>
               </tbody>
             </table>
@@ -43,7 +40,6 @@
       </div>
     </section>
 
-    <!-- Juhend -->
     <section class="mb-5">
       <div class="container">
         <div class="row justify-content-center">
@@ -78,8 +74,8 @@ export default {
         author: "",
         pax: 0,
         instructions: "",
-        imageUrl: "",       // pildi jaoks
-        ingredients: [],    // koostisosad (tabeli v-for)
+        imageUrl: "",
+        ingredients: [],
       },
     };
   },
@@ -100,21 +96,22 @@ export default {
           .then((response) => {
             const r = response.data;
 
-            // kaardistame backendi väljad fronti jaoks
             this.recipe = {
               ...this.recipe,
               id: r.recipeId,
               name: r.name,
               pax: r.pax,
               author: r.author,
-              // kui imageData on puhas Base64:
               imageUrl: r.imageData
                   ? "data:image/jpeg;base64," + r.imageData
                   : "",
-              // kui /recipe tagastab ka koostisosad & juhendi, lisa need siia
               instructions: r.instructions || "",
-              ingredients: r.ingredients || [],
             };
+
+            return RecipeService.getRecipeIngredients(recipeId);
+          })
+          .then(ingredientsResponse => {
+            this.recipe.ingredients = ingredientsResponse.data || [];
           })
           .catch((error) => {
             console.error("Retsepti laadimisel tekkis viga:", error);

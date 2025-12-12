@@ -1,7 +1,7 @@
 <template>
   <select @change="selectNewCookingTime($event.target.value)" :value="selectedCookingTimeId" class="form-select">
     <option selected :value="0" disabled>Valmistusaeg</option>
-    <option v-for="cookingTime in cookingTimes" :value="cookingTime.cookingTimeMinutesMax"> ~ {{cookingTime.cookingTimeMinutesMax}} minutit</option>
+    <option v-for="cookingTime in cookingTimes" :value="cookingTime.cookingTimeId"> ~ {{cookingTime.cookingTimeMinutesMax}} minutit</option>
   </select>
 </template>
 <script>

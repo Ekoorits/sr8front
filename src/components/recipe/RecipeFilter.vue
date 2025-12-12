@@ -78,16 +78,23 @@ export default {
   data () {
     return {
       filters: {
-        cookingTimeId: null,
-        difficultyId: null,
-        mealTypeId: null
+        cookingTimeId: 0,
+        difficultyId: 0,
+        mealTypeId: 0
       },
       sort: 'NEWEST',
       mealTypes: [],
       selectedMealType: '',
       difficulties: [],
       selectedDifficulty: '',
-      cookingTimes: [],
+
+      cookingTimes: [
+        {
+          cookingTimeId: 0,
+          cookingTimeMinutesMax: 0
+        }
+      ],
+
       selectedCookingTime: ''
     }
   },
@@ -138,9 +145,8 @@ export default {
       this.emitChange()
     },
 
-    onCookingTimeChange (value) {
-      this.selectedCookingTime = value
-      this.filters.cookingTimeId = value
+    onCookingTimeChange (cookingTimeId) {
+      this.filters.cookingTimeId = cookingTimeId
       this.emitChange()
     },
 

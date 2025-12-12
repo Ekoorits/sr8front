@@ -64,12 +64,14 @@ export default {
         description: ''
       },
       searchText: '',
+
       filters: {
-        cookingTimeId: null,
-        difficultyId: null,
-        mealTypeId: null,
+        cookingTimeId: 0,
+        difficultyId: 0,
+        mealTypeId: 0,
         sort: 'NEWEST'
       },
+
       errorMessage: '',
       successMessage: '',
       errorResponse: {
@@ -92,12 +94,13 @@ export default {
 
     loadRecipes () {
       console.log('loadRecipes filters:', this.filters)
-      let hasFilters =
-          this.filters.mealTypeId != null ||
-          this.filters.difficultyId != null ||
-          this.filters.cookingTimeId != null
-
-      if (hasFilters) {
+      // let hasFilters =
+      //     this.filters.mealTypeId != null ||
+      //     this.filters.difficultyId != null ||
+      //     this.filters.cookingTimeId != null
+      //
+      // if (hasFilters) {
+        alert( "mealTypeId: " + this.filters.mealTypeId + "difficultyId: " + this.filters.difficultyId + "cookingTimeId: " +  this.filters.cookingTimeId)
         RecipeService.sendGetFilteredRecipesRequest(
             this.filters.mealTypeId,
             this.filters.difficultyId,
@@ -108,14 +111,7 @@ export default {
               this.applySort()
             })
             .catch(() => {})
-      } else {
-        RecipeService.sendGetRecipesRequest(this.searchText)
-            .then((response) => {
-              this.recipes = response.data
-              this.applySort()
-            })
-            .catch(() => {})
-      }
+
     },
 
     // сортировка по id на фронте
@@ -161,7 +157,13 @@ export default {
 
     onSearchTextChanged (searchText) {
       this.searchText = searchText
-      this.loadRecipes()
+
+      RecipeService.sendGetRecipesRequest(this.searchText)
+          .then((response) => {
+            this.recipes = response.data
+            this.applySort()
+          })
+          .catch(() => {})
     },
 
     onAddToShoppingList (recipeId) {

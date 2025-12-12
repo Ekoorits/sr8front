@@ -18,13 +18,13 @@
           <div v-if="!isHomeView" class="col-auto">
             <SmallButton label="Kodu" @event-button-is-pressed="toHomeView"/>
           </div>
-          <div class="col-auto">
+          <div v-if="!isRecipeDetailsView" class="col-auto">
             <SmallButton label="Lisa retsept" @event-button-is-pressed="toRecipeDetailsView"/>
           </div>
-          <div class="col-auto">
+          <div v-if="!isMyRecipesView" class="col-auto">
             <SmallButton label="Minu retseptid" @event-button-is-pressed="toMyRecipesView"/>
           </div>
-          <div class="col-auto">
+          <div v-if="!isShoppingListsView" class="col-auto">
             <SmallButton label="Ostunimekirjad" @event-button-is-pressed="toShoppingLists"/>
           </div>
         </div>
@@ -70,6 +70,16 @@ export default {
 
     isHomeView() {
       return this.$route.name === 'homeRoute'
+    },
+
+    isRecipeDetailsView() {
+      // Please adjust 'recipeDetailsRoute' to match the actual name of the route in your router configuration.
+      return this.$route.name === 'recipeDetailsRoute';
+    },
+
+    isShoppingListsView() {
+      // Please adjust 'shoppingListsRoute' to match the actual name of the route in your router configuration.
+      return this.$route.name === 'shoppingListsRoute';
     }
   },
   methods: {

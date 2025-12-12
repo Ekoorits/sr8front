@@ -100,7 +100,7 @@ export default {
       //     this.filters.cookingTimeId != null
       //
       // if (hasFilters) {
-        alert( "mealTypeId: " + this.filters.mealTypeId + "difficultyId: " + this.filters.difficultyId + "cookingTimeId: " +  this.filters.cookingTimeId)
+        //alert( "mealTypeId: " + this.filters.mealTypeId + "difficultyId: " + this.filters.difficultyId + "cookingTimeId: " +  this.filters.cookingTimeId)
         RecipeService.sendGetFilteredRecipesRequest(
             this.filters.mealTypeId,
             this.filters.difficultyId,
